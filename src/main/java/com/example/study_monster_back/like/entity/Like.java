@@ -1,4 +1,7 @@
-package com.example.study_monster_back.entity;
+package com.example.study_monster_back.like.entity;
+
+import com.example.study_monster_back.board.entity.Board;
+import com.example.study_monster_back.user.entity.User;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,14 +13,13 @@ import lombok.Data;
 
 @Entity
 @Data
-public class BoardTag{
+public class Like{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
     @ManyToOne(fetch = FetchType.LAZY)
-    private Tag tag;
+    private User user;
     @ManyToOne(fetch = FetchType.LAZY)
     private Board board;
-
 }
