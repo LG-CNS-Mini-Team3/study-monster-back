@@ -16,14 +16,14 @@ import lombok.Data;
 @Entity
 @Data
 public class StudyMember{
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	@CreatedDate
-	private LocalDateTime joined_at;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @CreatedDate
+    private LocalDateTime joined_at;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	private User user;
-	@ManyToOne(fetch = FetchType.LAZY)
-	private StudyGroup studyGroup;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private StudyGroup studyGroup;
 }

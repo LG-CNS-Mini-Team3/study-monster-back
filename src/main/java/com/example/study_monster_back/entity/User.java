@@ -11,12 +11,12 @@ import lombok.Data;
 @Entity
 @Data
 public class User implements Serializable{
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String email;
-	private String pwd;
-	private String name;
+    private String pwd;
+    private String name;
     private String nickname;
     private String phone_number;
     private String role;

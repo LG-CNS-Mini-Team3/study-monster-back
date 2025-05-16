@@ -11,12 +11,12 @@ import lombok.Data;
 @Entity
 @Data
 public class Like{
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
-	@ManyToOne(fetch = FetchType.LAZY)
-	private User user;
-	@ManyToOne(fetch = FetchType.LAZY)
-	private Board board;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Board board;
 }

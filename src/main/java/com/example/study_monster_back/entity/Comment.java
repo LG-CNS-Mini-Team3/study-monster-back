@@ -16,9 +16,9 @@ import lombok.Data;
 @Entity
 @Data
 public class Comment{
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String content;
     @CreatedDate
@@ -26,8 +26,8 @@ public class Comment{
     @LastModifiedDate
     private LocalDateTime updated_at;
     
-	@ManyToOne(fetch = FetchType.LAZY)
-	private User user;
-	@ManyToOne(fetch = FetchType.LAZY)
-	private Board board;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Board board;
 }

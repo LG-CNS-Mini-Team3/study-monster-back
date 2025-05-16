@@ -10,12 +10,12 @@ import lombok.Data;
 @Entity
 @Data
 public class StudyGroupTag{
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@ManyToOne
-	private Tag tag;
-	@ManyToOne
-	private StudyGroup studyGroup;
+    @ManyToOne
+    private Tag tag;
+    @ManyToOne
+    private StudyGroup studyGroup;
 }
