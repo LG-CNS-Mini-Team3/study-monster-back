@@ -1,0 +1,29 @@
+package com.example.study_monster_back.entity;
+
+import java.time.LocalDateTime;
+
+import org.springframework.data.annotation.CreatedDate;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import lombok.Data;
+
+@Entity
+@Data
+public class Feedback{
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+    private String content;
+    @CreatedDate
+    private LocalDateTime created_at;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Board board;
+    
+}
