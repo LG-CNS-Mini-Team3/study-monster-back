@@ -1,9 +1,10 @@
-package com.example.study_monster_back.entity;
+package com.example.study_monster_back.feedback.entity;
 
 import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+
+import com.example.study_monster_back.board.entity.Board;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -15,7 +16,7 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Comment{
+public class Feedback{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,11 +24,8 @@ public class Comment{
     private String content;
     @CreatedDate
     private LocalDateTime created_at;
-    @LastModifiedDate
-    private LocalDateTime updated_at;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Board board;
+    
 }

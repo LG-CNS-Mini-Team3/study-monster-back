@@ -1,4 +1,4 @@
-package com.example.study_monster_back.entity;
+package com.example.study_monster_back.user.entity;
 
 import java.io.Serializable;
 
