@@ -1,6 +1,8 @@
 package com.example.study_monster_back.group.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -31,14 +33,18 @@ public class StudyGroupServiceImpl implements StudyGroupService {
         ));
    
         
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        
         return studyGroupRepository.findAll().stream()
         .map(group -> {
-            String status = LocalDate.now().isBefore(group.getDeadline().toLocalDate()) 
-            ? "모집중" 
-            : "모집완료";
-            
             int currentMembers = memberCountMap.getOrDefault(group.getId(), 0L).intValue(); //현재 멤버
+            int limitMembers = group.getLimit_members();
+            boolean isDeadlinePassed = LocalDateTime.now().isAfter(group.getDeadline());
+            boolean isFull = currentMembers == limitMembers;
 
+            String status = (isDeadlinePassed || isFull) ? "모집완료" : "모집중";
+
+            String formattedDeadline = group.getDeadline().toLocalDate().format(formatter);
             List<String> tagNames = Arrays.asList("Java", "Spring", "React"); //태그 임시 확인용
 
             return new StudyGroupResponseDTO(
@@ -48,11 +54,11 @@ public class StudyGroupServiceImpl implements StudyGroupService {
                 group.getCreated_at(),        
                 group.getDescription(),       
                 group.getLimit_members(),
-                group.getDeadline(),          
+                formattedDeadline,          
                 status,
                 currentMembers,
                 group.getCreator().getNickname(),           // nickname
-                "monster.png"); 
+                "/images/monster.png"); 
         })
          .collect(Collectors.toList());
     }

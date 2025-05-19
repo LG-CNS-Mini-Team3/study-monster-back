@@ -18,11 +18,11 @@ public class StudyGroupResponseDTO {
     private LocalDateTime created_at;
     private String description;
     private Integer limit_members;
-    private LocalDateTime deadline;
+    private String deadline;
     private String status;
     private int current;
     private String nickname;
-    private String profileImage;
+    String profileImage = "/images/monster.png"; //프로필 사진 추후 수정
 
     
     
