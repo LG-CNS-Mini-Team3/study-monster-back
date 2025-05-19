@@ -1,10 +1,6 @@
 package com.example.study_monster_back.comment.dto;
 
-import java.time.LocalDateTime;
-
-import com.example.study_monster_back.board.entity.Board;
 import com.example.study_monster_back.comment.entity.Comment;
-import com.example.study_monster_back.user.entity.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
