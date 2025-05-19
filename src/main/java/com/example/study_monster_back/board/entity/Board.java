@@ -2,17 +2,12 @@ package com.example.study_monster_back.board.entity;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import com.example.study_monster_back.user.entity.User;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
 @Entity
@@ -23,6 +18,7 @@ public class Board{
     private Long id;
 
     private String title;
+    @Column(columnDefinition = "TEXT")
     private String content;
     @CreatedDate
     private LocalDateTime created_at;
