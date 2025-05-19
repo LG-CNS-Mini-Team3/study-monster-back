@@ -4,11 +4,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,11 +41,12 @@ public class CommentController {
 
     @CrossOrigin
     @PostMapping("/comment/add")
-    public String addComment(@RequestBody Comment comment){
+    public ResponseEntity<?> addComment(@RequestBody Comment comment){
         comment.setUser(userRepository.findById((long) 1).get());
         comment.setBoard(boardRepository.findById((long) 1).get());
         commentRepository.save(comment);
-        return "redirect:/comment/list?board=1";
+
+        return ResponseEntity.ok("추가 완료");
     }
 
     @CrossOrigin
@@ -51,30 +55,36 @@ public class CommentController {
 
         List<Comment> list = commentRepository.findByBoardId(board);
         List<CommentDTO> list2 = list.stream().map(CommentDTO::new).collect(Collectors.toList());
-
         return list2;
     }
 
     @CrossOrigin
     @DeleteMapping("/comment/delete")
     @ResponseBody
-    public String deleteComment(@RequestParam int board){
+    public ResponseEntity<?> deleteComment(@RequestParam int board){
         commentRepository.deleteById(Long.valueOf(board));
 
-        return "success";
+        return ResponseEntity.ok("삭제 완료");
     }
 
     @CrossOrigin
     @PutMapping("/comment/modify")
-    public String updateComment(@PathVariable Long id, @RequestBody String content){
+    public ResponseEntity<?> updateComment(@RequestBody Comment comment){
 
-        Comment temp = commentRepository.findById(id).orElseThrow(()-> new RuntimeException("업성"));
+        System.out.println(comment.getContent());
 
-        temp.setContent(content);
-        commentRepository.save(temp);
+        Optional<Comment> temp = commentRepository.findById(comment.getId());
+
+        if (temp.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("댓글을 찾을 수 없습니다.");
+        }
+
+        Comment newComment = temp.get();
+        newComment.setContent(comment.getContent());
+        commentRepository.save(newComment);
 
 
-        return "redirect:/comment/list";
+        return ResponseEntity.ok("수정 완료");
     }
 
 }
