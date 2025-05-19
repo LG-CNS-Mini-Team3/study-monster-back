@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 @RequiredArgsConstructor
 @Tag(name = "Board", description = "게시글 관련 API")
-@RequestMapping("/api/boards")
+@RequestMapping("/boards")
 @RestController
 public class BoardController {
 
