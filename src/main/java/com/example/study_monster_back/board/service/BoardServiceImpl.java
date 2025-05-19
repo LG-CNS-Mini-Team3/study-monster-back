@@ -47,9 +47,6 @@ public class BoardServiceImpl implements BoardService {
             board.addBoardTag(boardTag);
         }
 
-        Board savedBoard = boardRepository.findByIdWithTags(board.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Board not found with ID: " + board.getId()));
-
-        return CreateBoardResponseDto.from(savedBoard);
+        return CreateBoardResponseDto.from(board);
     }
 }
