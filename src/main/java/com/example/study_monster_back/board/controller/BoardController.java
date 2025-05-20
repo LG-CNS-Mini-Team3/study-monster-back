@@ -8,10 +8,11 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/board")
+@RequestMapping("/boards")
 @RequiredArgsConstructor
 public class BoardController {
     private final BoardService boardService;
+
     @GetMapping("/{boardId}")
     public ResponseEntity<GetBoardResponseDto> getBoard(
         @PathVariable(value = "boardId") Long boardId

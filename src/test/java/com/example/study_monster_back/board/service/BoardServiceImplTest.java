@@ -1,6 +1,5 @@
 package com.example.study_monster_back.board.service;
 
-import com.example.study_monster_back.board.dto.db.BoardDetailInfo;
 import com.example.study_monster_back.board.dto.response.GetBoardResponseDto;
 import com.example.study_monster_back.board.entity.Board;
 import com.example.study_monster_back.board.repository.BoardRepository;
@@ -12,17 +11,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @DisplayName("board 서비스로 ")
-class BoardServiceTest {
+class BoardServiceImplTest {
     @Autowired
-    private BoardService boardService;
+    private BoardServiceImpl boardServiceImpl;
     @Autowired
     private BoardRepository boardRepository;
     @Autowired
@@ -62,7 +58,7 @@ class BoardServiceTest {
         System.out.println(board2.getId());
 
         // when
-        GetBoardResponseDto response = boardService.getBoard(board.getId());
+        GetBoardResponseDto response = boardServiceImpl.getBoard(board.getId());
 
         // then
         assertThat(response)
@@ -85,7 +81,7 @@ class BoardServiceTest {
 
         // when
         RuntimeException runtimeException = assertThrows(RuntimeException.class,
-            () -> boardService.getBoard(1L));
+            () -> boardServiceImpl.getBoard(1L));
 
         // then
         assertThat(runtimeException.getMessage())
