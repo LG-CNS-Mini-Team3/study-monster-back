@@ -6,6 +6,9 @@ import com.example.study_monster_back.board.dto.response.CreateBoardResponseDto;
 import com.example.study_monster_back.board.dto.response.GetBoardResponseDto;
 import com.example.study_monster_back.board.entity.Board;
 import com.example.study_monster_back.board.repository.BoardRepository;
+import com.example.study_monster_back.feedback.entity.Feedback;
+import com.example.study_monster_back.feedback.respository.FeedbackRepository;
+import com.example.study_monster_back.openAi.dto.response.OpenAiStudyFeedbackResponse;
 import com.example.study_monster_back.openAi.service.OpenAiService;
 import com.example.study_monster_back.tag.entity.BoardTag;
 import com.example.study_monster_back.tag.entity.Tag;
@@ -18,11 +21,14 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+    private final FeedbackRepository feedbackRepository;
     private final TagService tagService;
     private final BoardTagService boardTagService;
     private final TagValidator tagValidator;
@@ -64,6 +70,18 @@ public class BoardServiceImpl implements BoardService {
         Board board = boardRepository.findById(boardId).orElseThrow(() ->
             new RuntimeException("해당 id를 가진 게시글이 없습니다.")
         );
-        return new StudyFeedbackResponse(openAiService.getStudyFeedback(board.getTitle(), board.getContent()));
+        Optional<Feedback> optionalFeedback = feedbackRepository.findByBoard(board);
+        if (optionalFeedback.isEmpty() || optionalFeedback.get().getCreated_at().isBefore(board.getUpdated_at())) {
+            OpenAiStudyFeedbackResponse studyFeedback = openAiService.getStudyFeedback(board.getTitle(), board.getContent());
+            Feedback feedback = feedbackRepository.save(
+                Feedback.builder()
+                    .board(board)
+                    .feedback(studyFeedback.getFeedback())
+                    .futureLearningStrategy(studyFeedback.getFutureLearningStrategy())
+                    .build()
+            );
+            optionalFeedback = Optional.of(feedback);
+        }
+        return new StudyFeedbackResponse(optionalFeedback.get());
     }
 }

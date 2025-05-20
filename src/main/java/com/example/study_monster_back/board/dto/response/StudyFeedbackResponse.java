@@ -1,6 +1,6 @@
 package com.example.study_monster_back.board.dto.response;
 
-import com.example.study_monster_back.openAi.dto.response.OpenAiStudyFeedbackResponse;
+import com.example.study_monster_back.feedback.entity.Feedback;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,8 +10,8 @@ public class StudyFeedbackResponse {
     String feedback;
     String futureLearningStrategy;
 
-    public StudyFeedbackResponse(OpenAiStudyFeedbackResponse openAiResponse) {
-        this.feedback = openAiResponse.getFeedback();
-        this.futureLearningStrategy = openAiResponse.getFutureLearningStrategy();
+    public StudyFeedbackResponse(Feedback feedback) {
+        this.feedback = feedback.getFeedback();
+        this.futureLearningStrategy = feedback.getFutureLearningStrategy();
     }
 }
