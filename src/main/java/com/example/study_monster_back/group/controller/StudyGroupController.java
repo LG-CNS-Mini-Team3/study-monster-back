@@ -1,17 +1,23 @@
 package com.example.study_monster_back.group.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.study_monster_back.group.dto.StudyGroupRequestDTO;
 import com.example.study_monster_back.group.dto.StudyGroupResponseDTO;
 import com.example.study_monster_back.group.service.StudyGroupService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 @CrossOrigin(origins = "http://localhost:5173")
@@ -27,5 +33,16 @@ public class StudyGroupController {
         List<StudyGroupResponseDTO> studyGroups = studyGroupService.getAllStudyGroups();
         return ResponseEntity.ok(studyGroups);
     }
+    @PostMapping("/create")
+    public ResponseEntity<?> createStudyGroup(
+        @RequestBody StudyGroupRequestDTO dto,
+        @RequestParam Long userId) { //아이디는 테스트용
+        studyGroupService.create(dto, userId);
+
+    Map<String, String> response = new HashMap<>();
+    response.put("message", "스터디 생성 완료");
+
+    return ResponseEntity.ok(response); 
+}
 
 }
