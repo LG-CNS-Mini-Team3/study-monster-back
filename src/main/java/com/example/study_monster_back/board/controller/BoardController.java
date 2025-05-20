@@ -2,6 +2,7 @@ package com.example.study_monster_back.board.controller;
 
 import com.example.study_monster_back.board.dto.request.CreateBoardRequestDto;
 import com.example.study_monster_back.board.dto.response.CreateBoardResponseDto;
+import com.example.study_monster_back.board.dto.response.GetBoardResponseDto;
 import com.example.study_monster_back.board.service.BoardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,8 +17,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/boards")
 @RestController
 public class BoardController {
-
     private final BoardService boardService;
+
+    @GetMapping("/{boardId}")
+    public ResponseEntity<GetBoardResponseDto> getBoard(
+        @PathVariable(value = "boardId") Long boardId
+    ) {
+        return ResponseEntity.ok(boardService.getBoard(boardId));
+    }
 
     @PostMapping
     @Operation(summary = "게시글 작성",
@@ -27,5 +34,4 @@ public class BoardController {
         CreateBoardResponseDto boardResponseDto = boardService.createBoard(boardRequestDto);
         return ResponseEntity.ok(boardResponseDto);
     }
-
 }

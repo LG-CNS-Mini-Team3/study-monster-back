@@ -30,10 +30,8 @@ public class Board {
 
     @Column(columnDefinition = "TEXT")
     private String content;
-
     @CreatedDate
     private LocalDateTime created_at;
-
     @LastModifiedDate
     private LocalDateTime updated_at;
 
