@@ -9,9 +9,16 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.example.study_monster_back.group.dto.StudyGroupRequestDTO;
 import com.example.study_monster_back.group.dto.StudyGroupResponseDTO;
+import com.example.study_monster_back.group.entity.StudyGroup;
+import com.example.study_monster_back.group.entity.StudyMember;
 import com.example.study_monster_back.group.repository.StudyGroupRepository;
+import com.example.study_monster_back.group.repository.StudyMemberRepository;
+import com.example.study_monster_back.user.entity.User;
+import com.example.study_monster_back.user.repository.UserRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -19,6 +26,8 @@ import lombok.RequiredArgsConstructor;
 public class StudyGroupServiceImpl implements StudyGroupService {
 
     private final StudyGroupRepository studyGroupRepository;
+    private final UserRepository userRepository;
+    private final StudyMemberRepository studyMemberRepository;
 
 
     @Override
@@ -61,4 +70,31 @@ public class StudyGroupServiceImpl implements StudyGroupService {
         })
          .collect(Collectors.toList());
     }
+    
+    @Override
+    @Transactional
+    public void create(StudyGroupRequestDTO dto, Long userId) {
+    // 유저 조회
+    User creator = userRepository.findById(userId)
+        .orElseThrow(() -> new RuntimeException("사용자 없음"));
+
+    // StudyGroup 생성
+    StudyGroup group = new StudyGroup();
+    group.setName(dto.getName());
+    group.setDescription(dto.getDescription());
+    group.setDeadline(dto.getDeadline());
+    group.setLimit_members(dto.getLimit_members());
+    group.setStatus("모집중"); 
+    group.setCreator(creator); 
+
+    studyGroupRepository.save(group);
+
+    // 3 방장도 멤버
+    StudyMember member = new StudyMember();
+    member.setUser(creator);
+    member.setStudyGroup(group);
+
+    studyMemberRepository.save(member);
+}
+
 }
