@@ -6,7 +6,7 @@ import com.example.study_monster_back.board.entity.Board;
 import com.example.study_monster_back.board.repository.BoardRepository;
 import com.example.study_monster_back.tag.repository.TagRepository;
 import com.example.study_monster_back.user.entity.User;
-import com.example.study_monster_back.user.respository.UserRepository;
+import com.example.study_monster_back.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

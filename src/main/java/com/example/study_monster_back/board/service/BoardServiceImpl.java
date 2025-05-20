@@ -11,7 +11,7 @@ import com.example.study_monster_back.tag.service.BoardTagService;
 import com.example.study_monster_back.tag.service.TagService;
 import com.example.study_monster_back.tag.util.TagValidator;
 import com.example.study_monster_back.user.entity.User;
-import com.example.study_monster_back.user.respository.UserRepository;
+import com.example.study_monster_back.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

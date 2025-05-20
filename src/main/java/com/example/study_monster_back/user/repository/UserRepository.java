@@ -1,4 +1,4 @@
-package com.example.study_monster_back.user.respository;
+package com.example.study_monster_back.user.repository;
 
 import com.example.study_monster_back.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
