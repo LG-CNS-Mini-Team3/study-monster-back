@@ -14,7 +14,7 @@ public class StudyGroupResponseDTO {
 
     private Long id;
     private String name;
-    List<String> tags;
+    private List<String> tagList;
     private LocalDateTime created_at;
     private String description;
     private Integer limit_members;

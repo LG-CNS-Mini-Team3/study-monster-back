@@ -53,12 +53,12 @@ public class StudyGroupServiceImpl implements StudyGroupService {
             String status = (isDeadlinePassed || isFull) ? "모집완료" : "모집중";
 
             String formattedDeadline = group.getDeadline().toLocalDate().format(formatter);
-            List<String> tagNames = Arrays.asList("Java", "Spring", "React"); //태그 임시 확인용
+            List<String> tagList = Arrays.asList("Java", "Spring", "React"); //태그 임시 확인용
 
             return new StudyGroupResponseDTO(
                 group.getId(),
                 group.getName(),
-                tagNames,
+                tagList,
                 group.getCreated_at(),        
                 group.getDescription(),       
                 group.getLimit_members(),
