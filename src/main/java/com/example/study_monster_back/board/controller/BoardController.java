@@ -34,4 +34,12 @@ public class BoardController {
         CreateBoardResponseDto boardResponseDto = boardService.createBoard(boardRequestDto);
         return ResponseEntity.ok(boardResponseDto);
     }
+
+    @DeleteMapping("/{boardId}")
+    @Operation(summary = "게시글 삭제", description = "게시글을 삭제하면서 게시글과 연관된 댓글, 좋아요, 피드백, 게시글 태그를 함께 삭제합니다.")
+    public ResponseEntity<String> deleteBoard(@PathVariable Long boardId) {
+        // TODO: 추후에 @AuthenticationPrincipal로 유저 정보 가져와서 자신의 게시글일 경우에만 삭제
+        boardService.deleteBoard(boardId);
+        return ResponseEntity.ok("게시글을 정상적으로 삭제했습니다.");
+    }
 }
