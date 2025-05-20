@@ -74,9 +74,28 @@ public class StudyGroupServiceImpl implements StudyGroupService {
     @Override
     @Transactional
     public void create(StudyGroupRequestDTO dto, Long userId) {
-    // 유저 조회
-    User creator = userRepository.findById(userId)
+        
+        //사용자 조회
+     User creator = userRepository.findById(userId)
         .orElseThrow(() -> new RuntimeException("사용자 없음"));
+
+
+    if (dto.getLimit_members() < 2) {
+        throw new IllegalArgumentException("모집 인원은 2명 이상이어야 합니다.");
+    }
+
+    if (dto.getDeadline().isBefore(LocalDateTime.now())) {
+        throw new IllegalArgumentException("모집 마감일은 현재 시각 이후여야 합니다.");
+    }
+
+    if (dto.getName() == null || dto.getName().trim().isEmpty()) {
+        throw new IllegalArgumentException("스터디 제목을 입력해 주세요.");
+    }
+
+    if (dto.getDescription() == null || dto.getDescription().trim().isEmpty()) {
+        throw new IllegalArgumentException("스터디 설명을 입력해 주세요.");
+    }
+
 
     // StudyGroup 생성
     StudyGroup group = new StudyGroup();
@@ -96,5 +115,6 @@ public class StudyGroupServiceImpl implements StudyGroupService {
 
     studyMemberRepository.save(member);
 }
+
 
 }
