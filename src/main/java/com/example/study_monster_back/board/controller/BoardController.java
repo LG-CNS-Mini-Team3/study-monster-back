@@ -1,8 +1,10 @@
 package com.example.study_monster_back.board.controller;
 
 import com.example.study_monster_back.board.dto.request.CreateBoardRequestDto;
+import com.example.study_monster_back.board.dto.request.UpdateBoardRequestDto;
 import com.example.study_monster_back.board.dto.response.CreateBoardResponseDto;
 import com.example.study_monster_back.board.dto.response.GetBoardResponseDto;
+import com.example.study_monster_back.board.dto.response.UpdateBoardResponseDto;
 import com.example.study_monster_back.board.service.BoardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,6 +35,14 @@ public class BoardController {
         // TODO: 추후에 @AuthenticationPrincipal로 유저 정보 가져올 예정
         CreateBoardResponseDto boardResponseDto = boardService.createBoard(boardRequestDto);
         return ResponseEntity.ok(boardResponseDto);
+    }
+
+    @PutMapping("/{boardId}")
+    @Operation(summary = "게시글 수정", description = "게시글과 게시글 태그를 수정합니다.")
+    public ResponseEntity<UpdateBoardResponseDto> updateBoard(@PathVariable Long boardId, @Valid @RequestBody UpdateBoardRequestDto boardRequestDto) {
+        // TODO: 추후에 @AuthenticationPrincipal로 유저 정보 가져와서 자신의 게시글인 경우에만 수정
+        UpdateBoardResponseDto updateBoardResponseDto = boardService.updateBoard(boardId,boardRequestDto);
+        return ResponseEntity.ok(updateBoardResponseDto);
     }
 
     @DeleteMapping("/{boardId}")
