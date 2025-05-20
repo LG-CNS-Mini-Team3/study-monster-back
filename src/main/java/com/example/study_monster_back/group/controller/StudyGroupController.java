@@ -37,12 +37,9 @@ public class StudyGroupController {
     public ResponseEntity<?> createStudyGroup(
         @RequestBody StudyGroupRequestDTO dto,
         @RequestParam Long userId) { //아이디는 테스트용
+
         studyGroupService.create(dto, userId);
-
-    Map<String, String> response = new HashMap<>();
-    response.put("message", "스터디 생성 완료");
-
-    return ResponseEntity.ok(response); 
-}
+        return ResponseEntity.ok(Map.of("message", "스터디 생성 완료"));
+    }
 
 }
