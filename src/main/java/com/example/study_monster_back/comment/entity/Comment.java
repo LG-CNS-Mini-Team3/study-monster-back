@@ -4,11 +4,13 @@ import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.example.study_monster_back.board.entity.Board;
 import com.example.study_monster_back.user.entity.User;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,7 +20,8 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Comment{
+@EntityListeners(AuditingEntityListener.class)
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,7 +31,7 @@ public class Comment{
     private LocalDateTime created_at;
     @LastModifiedDate
     private LocalDateTime updated_at;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
     @ManyToOne(fetch = FetchType.LAZY)
