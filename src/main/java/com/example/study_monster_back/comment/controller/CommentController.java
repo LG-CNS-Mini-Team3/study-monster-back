@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.example.study_monster_back.comment.dto.Comment_INOUT;
 import com.example.study_monster_back.comment.service.CommentService;
@@ -15,6 +16,7 @@ import com.example.study_monster_back.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
 
 @CrossOrigin
+@RestController
 @RequestMapping("/comment")
 @RequiredArgsConstructor
 public class CommentController {
