@@ -15,7 +15,6 @@ import com.example.study_monster_back.comment.service.CommentService;
 
 import lombok.RequiredArgsConstructor;
 
-@RestController
 @CrossOrigin
 @RequestMapping("/comment")
 @RequiredArgsConstructor
@@ -32,8 +31,9 @@ public class CommentController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/list")
-    public List<Comment_INOUT> listComment(@RequestParam Long boardId){
-        return commentService.getComments(boardId);
+    public ResponseEntity<?> listComment(@RequestParam Long boardId){
+        List<Comment_INOUT> list = commentService.getComments(boardId);
+        return ResponseEntity.ok(list);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/delete")
