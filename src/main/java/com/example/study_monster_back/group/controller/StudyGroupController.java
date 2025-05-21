@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-
 @CrossOrigin
 @RestController
 @RequestMapping("/study-groups")
@@ -33,5 +32,5 @@ public class StudyGroupController {
     public ResponseEntity<StudyGroupResponseDTO> getStudyGroupById(@PathVariable Long studyId) {
     return ResponseEntity.ok(studyGroupService.getById(studyId));
 }
-
+   
 }
