@@ -9,10 +9,16 @@ import org.springframework.data.repository.query.Param;
 import com.example.study_monster_back.board.entity.Board;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
+        Page<Board> findByTitleContaining(String title, Pageable pageable);
+
+        Page<Board> findByContentContaining(String content, Pageable pageable);
+
+        @Query("SELECT b FROM Board b JOIN b.user u WHERE LOWER(u.nickname) LIKE LOWER(CONCAT('%', :writer, '%'))")
+        Page<Board> findByWriterContaining(@Param("writer") String writer, Pageable pageable);
+
         @Query("SELECT b FROM Board b JOIN b.user u " +
                         "WHERE LOWER(b.title) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
                         "OR LOWER(b.content) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
                         "OR LOWER(u.nickname) LIKE LOWER(CONCAT('%', :keyword, '%'))")
         Page<Board> searchByKeyword(@Param("keyword") String keyword, Pageable pageable);
-
 }
