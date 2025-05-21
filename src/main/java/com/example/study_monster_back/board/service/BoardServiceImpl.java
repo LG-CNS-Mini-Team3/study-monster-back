@@ -1,24 +1,27 @@
 package com.example.study_monster_back.board.service;
 
+import com.example.study_monster_back.board.dto.response.StudyFeedbackResponse;
 import com.example.study_monster_back.board.dto.request.CreateBoardRequestDto;
 import com.example.study_monster_back.board.dto.request.UpdateBoardRequestDto;
 import com.example.study_monster_back.board.dto.response.CreateBoardResponseDto;
 import com.example.study_monster_back.board.dto.response.GetBoardResponseDto;
 import com.example.study_monster_back.board.dto.response.UpdateBoardResponseDto;
-import com.example.study_monster_back.board.entity.Board;
+import com.example.study_monster_back.tag.dto.response.TagResponseDto;
+import com.example.study_monster_back.user.repository.UserRepository;
 import com.example.study_monster_back.board.repository.BoardRepository;
 import com.example.study_monster_back.comment.repository.CommentRepository;
 import com.example.study_monster_back.feedback.repository.FeedbackRepository;
 import com.example.study_monster_back.like.repository.LikeRepository;
-import com.example.study_monster_back.tag.dto.response.TagResponseDto;
+import com.example.study_monster_back.board.entity.Board;
+import com.example.study_monster_back.feedback.entity.Feedback;
 import com.example.study_monster_back.tag.entity.BoardTag;
+import com.example.study_monster_back.user.entity.User;
 import com.example.study_monster_back.tag.entity.Tag;
+import com.example.study_monster_back.openAi.dto.response.OpenAiStudyFeedbackResponse;
+import com.example.study_monster_back.openAi.service.OpenAiService;
 import com.example.study_monster_back.tag.service.BoardTagService;
 import com.example.study_monster_back.tag.service.TagService;
 import com.example.study_monster_back.tag.util.TagValidator;
-import com.example.study_monster_back.user.entity.User;
-import com.example.study_monster_back.user.repository.UserRepository;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +44,7 @@ public class BoardServiceImpl implements BoardService {
     private final TagService tagService;
     private final BoardTagService boardTagService;
     private final TagValidator tagValidator;
+    private final OpenAiService openAiService;
 
     public GetBoardResponseDto getBoard(Long boardId) {
         return GetBoardResponseDto.builder()
@@ -137,6 +142,26 @@ public class BoardServiceImpl implements BoardService {
         return tagResponseDtoList;
     }
 
+    public StudyFeedbackResponse getStudyFeedback(Long boardId) {
+        Board board = boardRepository.findById(boardId).orElseThrow(() ->
+            new RuntimeException("해당 id를 가진 게시글이 없습니다.")
+        );
+        Optional<Feedback> optionalFeedback = feedbackRepository.findByBoard(board);
+        if (optionalFeedback.isEmpty() || optionalFeedback.get().getCreated_at().isBefore(board.getUpdated_at())) {
+            OpenAiStudyFeedbackResponse studyFeedback = openAiService.getStudyFeedback(board.getTitle(), board.getContent());
+            Feedback feedback = feedbackRepository.save(
+                Feedback.builder()
+                    .board(board)
+                    .feedback(studyFeedback.getFeedback())
+                    .futureLearningStrategy(studyFeedback.getFutureLearningStrategy())
+                    .build()
+            );
+            optionalFeedback = Optional.of(feedback);
+        }
+        return new StudyFeedbackResponse(optionalFeedback.get());
+
+    }
+  
     private User getUserOrThrow(Long userId) {
 
         User user = userRepository.findById(userId)

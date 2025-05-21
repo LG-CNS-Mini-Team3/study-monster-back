@@ -6,10 +6,13 @@ import com.example.study_monster_back.board.dto.request.CreateBoardRequestDto;
 import com.example.study_monster_back.board.dto.response.CreateBoardResponseDto;
 import com.example.study_monster_back.board.dto.response.UpdateBoardResponseDto;
 import com.example.study_monster_back.tag.dto.response.TagResponseDto;
+import com.example.study_monster_back.board.dto.response.StudyFeedbackResponse;
 
 import java.util.List;
 
 public interface BoardService {
+
+    StudyFeedbackResponse getStudyFeedback(Long boardId);
 
     GetBoardResponseDto getBoard(Long boardId);
 
