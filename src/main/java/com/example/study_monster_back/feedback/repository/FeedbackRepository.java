@@ -1,4 +1,4 @@
-package com.example.study_monster_back.feedback.respository;
+package com.example.study_monster_back.feedback.repository;
 
 import com.example.study_monster_back.board.entity.Board;
 import com.example.study_monster_back.feedback.entity.Feedback;

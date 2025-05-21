@@ -7,7 +7,7 @@ import com.example.study_monster_back.board.dto.response.GetBoardResponseDto;
 import com.example.study_monster_back.board.entity.Board;
 import com.example.study_monster_back.board.repository.BoardRepository;
 import com.example.study_monster_back.feedback.entity.Feedback;
-import com.example.study_monster_back.feedback.respository.FeedbackRepository;
+import com.example.study_monster_back.feedback.repository.FeedbackRepository;
 import com.example.study_monster_back.openAi.dto.response.OpenAiStudyFeedbackResponse;
 import com.example.study_monster_back.openAi.service.OpenAiService;
 import com.example.study_monster_back.tag.entity.BoardTag;
