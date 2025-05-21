@@ -169,6 +169,8 @@ class BoardServiceImplTest {
         StudyFeedbackResponse response = boardServiceImpl.getStudyFeedback(board.getId());
 
         // then
+        Feedback feedback = feedbackRepository.findByBoard(board).get();
+        assertThat(feedback).isNotNull();
         assertThat(response.getFeedback()).isNull();
         assertThat(response.getFutureLearningStrategy()).isNull();
         verify(openAiService, times(1)).getStudyFeedback(anyString(), anyString());

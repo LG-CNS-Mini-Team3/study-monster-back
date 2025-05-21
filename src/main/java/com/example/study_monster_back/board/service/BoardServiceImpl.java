@@ -17,9 +17,9 @@ import com.example.study_monster_back.tag.service.TagService;
 import com.example.study_monster_back.tag.util.TagValidator;
 import com.example.study_monster_back.user.entity.User;
 import com.example.study_monster_back.user.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -66,12 +66,14 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    @Transactional
     public StudyFeedbackResponse getStudyFeedback(Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow(() ->
             new RuntimeException("해당 id를 가진 게시글이 없습니다.")
         );
         Optional<Feedback> optionalFeedback = feedbackRepository.findByBoard(board);
         if (optionalFeedback.isEmpty() || optionalFeedback.get().getCreated_at().isBefore(board.getUpdated_at())) {
+            optionalFeedback.ifPresent(feedback -> feedbackRepository.deleteById(feedback.getId()));
             OpenAiStudyFeedbackResponse studyFeedback = openAiService.getStudyFeedback(board.getTitle(), board.getContent());
             Feedback feedback = feedbackRepository.save(
                 Feedback.builder()
