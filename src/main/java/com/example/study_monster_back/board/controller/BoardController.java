@@ -3,6 +3,7 @@ package com.example.study_monster_back.board.controller;
 import com.example.study_monster_back.board.dto.request.CreateBoardRequestDto;
 import com.example.study_monster_back.board.dto.response.CreateBoardResponseDto;
 import com.example.study_monster_back.board.dto.response.GetBoardResponseDto;
+import com.example.study_monster_back.board.dto.response.StudyFeedbackResponse;
 import com.example.study_monster_back.board.service.BoardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,10 +29,15 @@ public class BoardController {
 
     @PostMapping
     @Operation(summary = "게시글 작성",
-            description = "게시글을 작성하고, 해당 게시글의 해시태그도 소문자로 변환하여 저장합니다.")
+        description = "게시글을 작성하고, 해당 게시글의 해시태그도 소문자로 변환하여 저장합니다.")
     public ResponseEntity<CreateBoardResponseDto> createBoard(@Valid @RequestBody CreateBoardRequestDto boardRequestDto) {
         // TODO: 추후에 @AuthenticationPrincipal로 유저 정보 가져올 예정
         CreateBoardResponseDto boardResponseDto = boardService.createBoard(boardRequestDto);
         return ResponseEntity.ok(boardResponseDto);
+    }
+
+    @GetMapping("/{boardId}/feedback")
+    public ResponseEntity<StudyFeedbackResponse> getStudyFeedback(@PathVariable Long boardId) {
+        return ResponseEntity.ok(boardService.getStudyFeedback(boardId));
     }
 }
