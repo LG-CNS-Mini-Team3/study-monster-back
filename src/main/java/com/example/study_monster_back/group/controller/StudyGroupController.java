@@ -12,20 +12,26 @@ import com.example.study_monster_back.group.service.StudyGroupService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin
 @RestController
-@RequestMapping("/study-group")
+@RequestMapping("/study-groups")
 @RequiredArgsConstructor
 public class StudyGroupController {
 
     private final StudyGroupService studyGroupService;
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<StudyGroupResponseDTO>> getList() {
         List<StudyGroupResponseDTO> studyGroups = studyGroupService.getAllStudyGroups();
         return ResponseEntity.ok(studyGroups);
     }
+
+    @GetMapping("/{studyId}")
+    public ResponseEntity<StudyGroupResponseDTO> getStudyGroupById(@PathVariable Long studyId) {
+    return ResponseEntity.ok(studyGroupService.getById(studyId));
+}
 
 }
