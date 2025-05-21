@@ -43,7 +43,7 @@ public class StudyGroupServiceImpl implements StudyGroupService {
             boolean isFull = currentMembers == limitMembers;
 
             String status = (isDeadlinePassed || isFull) ? "모집완료" : "모집중";
-            String formattedDeadline = group.getDeadline().toLocalDate().format(formatter);
+            String formattedDeadline = group.getDeadline().format(formatter);
 
             List<String> tagNames = Arrays.asList("Java", "Spring", "React"); //태그 임시 확인용
 
@@ -71,8 +71,10 @@ public class StudyGroupServiceImpl implements StudyGroupService {
 
         boolean isDeadlinePassed = LocalDateTime.now().isAfter(group.getDeadline());
         boolean isFull = current >= group.getLimit_members();
-        
+
         String status = (isDeadlinePassed || isFull) ? "모집완료" : "모집중";
+        String formattedDeadline = group.getDeadline().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
 
         List<String> tagList = Arrays.asList("Java", "Spring", "React"); // 추후 태그 기능 연동
 
@@ -83,7 +85,7 @@ public class StudyGroupServiceImpl implements StudyGroupService {
             group.getCreated_at(),                
             group.getDescription(),                  
             group.getLimit_members(),                
-            group.getDeadline().toLocalDate().toString(), 
+            formattedDeadline, 
             status,                                 
             current,                                
             group.getCreator().getNickname()
