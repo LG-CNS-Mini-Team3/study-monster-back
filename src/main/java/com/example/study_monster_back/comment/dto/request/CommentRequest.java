@@ -3,7 +3,7 @@ package com.example.study_monster_back.comment.dto.request;
 import lombok.Data;
 
 @Data
-public class DelCommentRequest {
+public class CommentRequest {
     private Long commentId;
-    private Long adminId;
+    private Long userId;
 }
