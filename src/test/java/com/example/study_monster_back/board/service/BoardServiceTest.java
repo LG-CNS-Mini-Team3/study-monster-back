@@ -11,6 +11,7 @@ import com.example.study_monster_back.feedback.entity.Feedback;
 import com.example.study_monster_back.feedback.repository.FeedbackRepository;
 import com.example.study_monster_back.like.entity.Like;
 import com.example.study_monster_back.like.repository.LikeRepository;
+import com.example.study_monster_back.tag.dto.response.TagResponseDto;
 import com.example.study_monster_back.tag.repository.BoardTagRepository;
 import com.example.study_monster_back.user.entity.User;
 import com.example.study_monster_back.user.repository.UserRepository;
@@ -139,7 +140,7 @@ public class BoardServiceTest {
 
 
     @Test
-    void 게시글_삭제_시_연관된_데이터도_함께_삭제됨() {
+    void 게시글_삭제_시_연관된_데이터도_함께_삭제된다() {
         // given
         User user = createAndSaveUser();
 
@@ -174,6 +175,33 @@ public class BoardServiceTest {
         assertThat(commentRepository.countByBoard(board)).isEqualTo(0);
         assertThat(likeRepository.countByBoard(board)).isEqualTo(0);
         assertThat(feedbackRepository.countByBoard(board)).isEqualTo(0);
+    }
+
+    @Test
+    void 게시글Id로_해당_게시글의_태그를_조회한다() {
+        // given
+        User user = createAndSaveUser();
+
+        CreateBoardRequestDto requestDto = new CreateBoardRequestDto(
+                "해당 게시글의 태그 조회",
+                "해당 게시글의 태그 조회",
+                user.getId(),
+                Arrays.asList("get_tag1", "get_tag2")
+        );
+        CreateBoardResponseDto created = boardService.createBoard(requestDto);
+
+
+        // when
+        List<TagResponseDto> tagResponseDtoList = boardService.getBoardTags(created.getId());
+
+        // then
+        List<String> tagNames = tagResponseDtoList.stream()
+                .map(tagResponseDto -> tagResponseDto.getName())
+                .toList();
+
+        assertThat(tagNames.size()).isEqualTo(2);
+        assertTrue(tagNames.contains("get_tag1"));
+        assertTrue(tagNames.contains("get_tag2"));
     }
 
 
