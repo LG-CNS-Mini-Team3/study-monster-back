@@ -9,8 +9,8 @@ import com.example.study_monster_back.board.entity.Board;
 import com.example.study_monster_back.board.repository.BoardRepository;
 import com.example.study_monster_back.comment.repository.CommentRepository;
 import com.example.study_monster_back.feedback.repository.FeedbackRepository;
-import com.example.study_monster_back.like.entity.Like;
 import com.example.study_monster_back.like.repository.LikeRepository;
+import com.example.study_monster_back.tag.dto.response.TagResponseDto;
 import com.example.study_monster_back.tag.entity.BoardTag;
 import com.example.study_monster_back.tag.entity.Tag;
 import com.example.study_monster_back.tag.service.BoardTagService;
@@ -18,11 +18,13 @@ import com.example.study_monster_back.tag.service.TagService;
 import com.example.study_monster_back.tag.util.TagValidator;
 import com.example.study_monster_back.user.entity.User;
 import com.example.study_monster_back.user.repository.UserRepository;
-import jakarta.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -119,6 +121,20 @@ public class BoardServiceImpl implements BoardService {
         likeRepository.deleteAllByBoard(board);
         feedbackRepository.deleteAllByBoard(board);
         boardRepository.delete(board);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TagResponseDto> getBoardTags(Long boardId) {
+
+        Board board = boardRepository.findByIdWithTags(boardId)
+                .orElseThrow(() -> new IllegalArgumentException("Board not found with ID: " + boardId));
+
+        List<TagResponseDto> tagResponseDtoList = board.getBoardTags().stream()
+                .map(bt -> TagResponseDto.from(bt.getTag()))
+                .collect(Collectors.toList());
+
+        return tagResponseDtoList;
     }
 
     private User getUserOrThrow(Long userId) {

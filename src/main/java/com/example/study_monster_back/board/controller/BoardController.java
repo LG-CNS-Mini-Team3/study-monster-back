@@ -6,12 +6,15 @@ import com.example.study_monster_back.board.dto.response.CreateBoardResponseDto;
 import com.example.study_monster_back.board.dto.response.GetBoardResponseDto;
 import com.example.study_monster_back.board.dto.response.UpdateBoardResponseDto;
 import com.example.study_monster_back.board.service.BoardService;
+import com.example.study_monster_back.tag.dto.response.TagResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @CrossOrigin
 @RequiredArgsConstructor
@@ -51,5 +54,12 @@ public class BoardController {
         // TODO: 추후에 @AuthenticationPrincipal로 유저 정보 가져와서 자신의 게시글일 경우에만 삭제
         boardService.deleteBoard(boardId);
         return ResponseEntity.ok("게시글을 정상적으로 삭제했습니다.");
+    }
+
+    @GetMapping("/{boardId}/tags")
+    @Operation(summary = "게시글의 태그 조회", description = "해당 게시글의 태그를 조회합니다.")
+    public ResponseEntity<List<TagResponseDto>> getBoardTags(@PathVariable Long boardId) {
+        List<TagResponseDto> tagResponseDtoList = boardService.getBoardTags(boardId);
+        return ResponseEntity.ok(tagResponseDtoList);
     }
 }
