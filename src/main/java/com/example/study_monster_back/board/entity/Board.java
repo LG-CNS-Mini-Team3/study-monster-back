@@ -1,28 +1,34 @@
 package com.example.study_monster_back.board.entity;
 
-import java.time.LocalDateTime;
-
+import com.example.study_monster_back.tag.entity.BoardTag;
+import com.example.study_monster_back.user.entity.User;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.example.study_monster_back.user.entity.User;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import lombok.Data;
-
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 @Entity
 @Data
-public class Board{
+public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
+
+    @Column(columnDefinition = "TEXT")
     private String content;
     @CreatedDate
     private LocalDateTime created_at;
@@ -31,5 +37,13 @@ public class Board{
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
-    
+
+    @Builder.Default
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BoardTag> boardTags = new ArrayList<>();
+
+    public void addBoardTag(BoardTag boardTag) {
+        boardTags.add(boardTag);
+    }
+
 }
