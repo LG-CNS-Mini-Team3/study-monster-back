@@ -80,7 +80,7 @@ public class StudyGroupServiceImpl implements StudyGroupService {
 
     @Override
     public StudyGroupResponseDTO getById(Long id) {
-        StudyGroup group = studyGroupRepository.findById(id)
+        StudyGroup group = studyGroupRepository.findByIdWithTags(id)
                 .orElseThrow(() -> new RuntimeException("스터디 없음"));
         int current = studyMemberRepository.countMembersByStudyGroup(group);
 
