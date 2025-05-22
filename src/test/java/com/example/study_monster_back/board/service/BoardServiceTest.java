@@ -1,10 +1,18 @@
 package com.example.study_monster_back.board.service;
 
 import com.example.study_monster_back.board.dto.request.CreateBoardRequestDto;
+import com.example.study_monster_back.board.dto.request.UpdateBoardRequestDto;
 import com.example.study_monster_back.board.dto.response.CreateBoardResponseDto;
 import com.example.study_monster_back.board.entity.Board;
 import com.example.study_monster_back.board.repository.BoardRepository;
-import com.example.study_monster_back.tag.repository.TagRepository;
+import com.example.study_monster_back.comment.entity.Comment;
+import com.example.study_monster_back.comment.repository.CommentRepository;
+import com.example.study_monster_back.feedback.entity.Feedback;
+import com.example.study_monster_back.feedback.repository.FeedbackRepository;
+import com.example.study_monster_back.like.entity.Like;
+import com.example.study_monster_back.like.repository.LikeRepository;
+import com.example.study_monster_back.tag.dto.response.TagResponseDto;
+import com.example.study_monster_back.tag.repository.BoardTagRepository;
 import com.example.study_monster_back.user.entity.User;
 import com.example.study_monster_back.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -13,10 +21,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
@@ -34,7 +44,16 @@ public class BoardServiceTest {
     private UserRepository userRepository;
 
     @Autowired
-    private TagRepository tagRepository;
+    private BoardTagRepository boardTagRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
+
+    @Autowired
+    private FeedbackRepository feedbackRepository;
+
+    @Autowired
+    private LikeRepository likeRepository;
 
     @Test
     void 게시글_생성_요청시_게시글과_태그가_함께_저장된다() {
@@ -79,6 +98,113 @@ public class BoardServiceTest {
     }
 
 
+    @Test
+    void 게시글_수정_시_제목_내용_태그가_정상적으로_변경된다() {
+        // given
+        User user = createAndSaveUser();
+
+        CreateBoardRequestDto createDto = new CreateBoardRequestDto(
+                "원래 제목",
+                "원래 내용",
+                user.getId(),
+                Arrays.asList("original1", "original2")
+        );
+        CreateBoardResponseDto createdBoard = boardService.createBoard(createDto);
+
+        UpdateBoardRequestDto updateDto = new UpdateBoardRequestDto(
+                "수정된 제목",
+                "수정된 내용",
+                user.getId(),
+                Arrays.asList("original1", "change1") // original2 → 제거, change1 → 추가
+        );
+
+        // when
+        boardService.updateBoard(createdBoard.getId(), updateDto);
+
+        // then
+        Board updatedBoard = boardRepository.findByIdWithTags(createdBoard.getId())
+                .orElseThrow(() -> new AssertionError("게시글이 수정되지 않았습니다."));
+
+        assertThat(updatedBoard.getTitle()).isEqualTo("수정된 제목");
+        assertThat(updatedBoard.getContent()).isEqualTo("수정된 내용");
+
+        List<String> tagNames = updatedBoard.getBoardTags().stream()
+                .map(bt -> bt.getTag().getName())
+                .toList();
+
+        assertThat(tagNames.size()).isEqualTo(2);
+        assertTrue(tagNames.contains("original1"));
+        assertTrue(tagNames.contains("change1"));
+        assertFalse(tagNames.contains("original2"));
+    }
+
+
+    @Test
+    void 게시글_삭제_시_연관된_데이터도_함께_삭제된다() {
+        // given
+        User user = createAndSaveUser();
+
+        CreateBoardRequestDto requestDto = new CreateBoardRequestDto(
+                "삭제 테스트 제목",
+                "삭제 테스트 내용",
+                user.getId(),
+                Arrays.asList("deleteTest1", "deleteTest2")
+        );
+        CreateBoardResponseDto created = boardService.createBoard(requestDto);
+        Long boardId = created.getId();
+
+        Board board = boardRepository.findById(boardId).orElseThrow();
+
+        commentRepository.save(new Comment(null, "댓글1", LocalDateTime.now(), LocalDateTime.now(), user, board));
+        commentRepository.save(new Comment(null, "댓글2", LocalDateTime.now(), LocalDateTime.now(), user, board));
+        likeRepository.save(new Like(null, user, board));
+        feedbackRepository.save(new Feedback(null, "피드백1", "피드백2", LocalDateTime.now(), board));
+
+        assertThat(boardRepository.findById(boardId)).isNotEmpty();
+        assertThat(boardTagRepository.countByBoard(board)).isEqualTo(2);
+        assertThat(commentRepository.countByBoard(board)).isEqualTo(2);
+        assertThat(likeRepository.countByBoard(board)).isEqualTo(1);
+        assertThat(feedbackRepository.countByBoard(board)).isEqualTo(1);
+
+        // when
+        boardService.deleteBoard(boardId);
+
+        // then
+        assertThat(boardRepository.findById(boardId)).isEmpty();
+        assertThat(boardTagRepository.countByBoard(board)).isEqualTo(0);
+        assertThat(commentRepository.countByBoard(board)).isEqualTo(0);
+        assertThat(likeRepository.countByBoard(board)).isEqualTo(0);
+        assertThat(feedbackRepository.countByBoard(board)).isEqualTo(0);
+    }
+
+    @Test
+    void 게시글Id로_해당_게시글의_태그를_조회한다() {
+        // given
+        User user = createAndSaveUser();
+
+        CreateBoardRequestDto requestDto = new CreateBoardRequestDto(
+                "해당 게시글의 태그 조회",
+                "해당 게시글의 태그 조회",
+                user.getId(),
+                Arrays.asList("get_tag1", "get_tag2")
+        );
+        CreateBoardResponseDto created = boardService.createBoard(requestDto);
+
+
+        // when
+        List<TagResponseDto> tagResponseDtoList = boardService.getBoardTags(created.getId());
+
+        // then
+        List<String> tagNames = tagResponseDtoList.stream()
+                .map(tagResponseDto -> tagResponseDto.getName())
+                .toList();
+
+        assertThat(tagNames.size()).isEqualTo(2);
+        assertTrue(tagNames.contains("get_tag1"));
+        assertTrue(tagNames.contains("get_tag2"));
+    }
+
+
     private User createAndSaveUser() {
 
         User user = new User();
@@ -91,4 +217,5 @@ public class BoardServiceTest {
 
         return userRepository.save(user);
     }
+
 }
