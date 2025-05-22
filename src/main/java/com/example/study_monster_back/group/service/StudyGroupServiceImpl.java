@@ -12,6 +12,8 @@ import com.example.study_monster_back.tag.entity.Tag;
 import com.example.study_monster_back.tag.service.StudyGroupTagService;
 import com.example.study_monster_back.tag.service.TagService;
 import com.example.study_monster_back.tag.util.TagValidator;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.study_monster_back.group.dto.StudyGroupRequestDTO;
@@ -160,4 +162,43 @@ public class StudyGroupServiceImpl implements StudyGroupService {
         }
 
     }
+
+    @Override
+    public Page<StudyGroupResponseDTO> getStudyGroupsByTags(List<String> tags, Pageable pageable) {
+        Page<StudyGroup> studyGroups;
+        if (tags == null || tags.isEmpty()) {
+            studyGroups = studyGroupRepository.findAllWithTags(pageable);
+        } else {
+            studyGroups = studyGroupRepository.findByAnyTags(tags, pageable);
+        }
+
+        return studyGroups.map(this::toDto);
+    }
+
+    private StudyGroupResponseDTO toDto(StudyGroup group) {
+        int current = studyMemberRepository.countMembersByStudyGroup(group);
+
+        boolean isDeadlinePassed = LocalDateTime.now().isAfter(group.getDeadline());
+        boolean isFull = current >= group.getLimit_members();
+        String status = (isDeadlinePassed || isFull) ? "모집완료" : "모집중";
+
+        String formattedDeadline = group.getDeadline().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        List<TagResponseDto> tagList = group.getStudyGroupTags().stream()
+                .map(sgt -> TagResponseDto.from(sgt.getTag()))
+                .toList();
+
+        return new StudyGroupResponseDTO(
+                group.getId(),
+                group.getName(),
+                tagList,
+                group.getCreated_at(),
+                group.getDescription(),
+                group.getLimit_members(),
+                formattedDeadline,
+                status,
+                current,
+                group.getCreator().getNickname()
+        );
+    }
+
 }

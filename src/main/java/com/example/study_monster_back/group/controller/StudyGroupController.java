@@ -3,6 +3,11 @@ package com.example.study_monster_back.group.controller;
 import java.util.List;
 import java.util.Map;
 
+import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,5 +50,17 @@ public class StudyGroupController {
     public ResponseEntity<StudyGroupResponseDTO> getStudyGroupById(@PathVariable Long studyId) {
         return ResponseEntity.ok(studyGroupService.getById(studyId));
 
+    }
+
+    @GetMapping("/search/tags")
+    @Operation(summary = "태그로 스터디그룹 조회", description = "해당 태그들을 하나라도 가진 스터디그룹을 조회합니다.")
+    public ResponseEntity<Page<StudyGroupResponseDTO>> searchByTags(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) List<String> tags) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
+
+        return ResponseEntity.ok(studyGroupService.getStudyGroupsByTags(tags, pageable));
     }
 }
