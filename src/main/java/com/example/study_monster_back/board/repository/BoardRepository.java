@@ -13,8 +13,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     Page<Board> findByContentContaining(String content, Pageable pageable);
 
-    @Query("SELECT b FROM Board b JOIN b.user u WHERE LOWER(u.nickname) LIKE LOWER(CONCAT('%', :writer, '%'))")
-    Page<Board> findByWriterContaining(@Param("writer") String writer, Pageable pageable);
+    @Query("SELECT b FROM Board b JOIN b.user u WHERE LOWER(u.nickname) LIKE LOWER(CONCAT('%', :nickname, '%'))")
+    Page<Board> findByWriterContaining(@Param("nickname") String nickname, Pageable pageable);
 
     @Query("SELECT b FROM Board b JOIN b.user u " +
             "WHERE LOWER(b.title) LIKE LOWER(CONCAT('%', :keyword, '%')) " +

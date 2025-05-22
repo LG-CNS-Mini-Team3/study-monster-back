@@ -29,7 +29,7 @@ public class BoardService {
                 case "content":
                     boards = boardRepository.findByContentContaining(keyword, pageable);
                     break;
-                case "writer":
+                case "nickname":
                     boards = boardRepository.findByWriterContaining(keyword, pageable);
                     break;
                 case "all":
