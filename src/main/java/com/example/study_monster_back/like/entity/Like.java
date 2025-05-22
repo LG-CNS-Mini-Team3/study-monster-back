@@ -1,8 +1,11 @@
 package com.example.study_monster_back.like.entity;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import com.example.study_monster_back.board.entity.Board;
 import com.example.study_monster_back.user.entity.User;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -21,6 +24,9 @@ public class Like{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "is_dislike", columnDefinition = "integer default 0")
+    private Long isDislike;
     
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
