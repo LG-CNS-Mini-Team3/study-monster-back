@@ -51,10 +51,6 @@ public class Board {
         boardTags.add(boardTag);
     }
 
-<<<<<<< HEAD
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Bookmark> bookmarks = new ArrayList<>();
-=======
     public void removeBoardTag(BoardTag boardTag) {
         boardTags.remove(boardTag);
         boardTag.setBoard(null);
@@ -64,6 +60,5 @@ public class Board {
         this.title = boardRequestDto.getTitle();
         this.content = boardRequestDto.getContent();
     }
->>>>>>> d6ffdd797c7419fc7f8467fcef15ffeedd76e9b8
 
 }
