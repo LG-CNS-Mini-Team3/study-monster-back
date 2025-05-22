@@ -3,7 +3,6 @@ package com.example.study_monster_back.board.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import com.example.study_monster_back.board.dto.response.BoardResponse;
 import com.example.study_monster_back.board.entity.Board;
 import com.example.study_monster_back.board.repository.BoardRepository;
