@@ -1,6 +1,10 @@
 package com.example.study_monster_back.board.entity;
 
+<<<<<<< HEAD
 import com.example.study_monster_back.bookmark.entity.Bookmark;
+=======
+import com.example.study_monster_back.board.dto.request.UpdateBoardRequestDto;
+>>>>>>> d6ffdd797c7419fc7f8467fcef15ffeedd76e9b8
 import com.example.study_monster_back.tag.entity.BoardTag;
 import com.example.study_monster_back.user.entity.User;
 import jakarta.persistence.*;
@@ -31,10 +35,8 @@ public class Board {
 
     @Column(columnDefinition = "TEXT")
     private String content;
-
     @CreatedDate
     private LocalDateTime created_at;
-
     @LastModifiedDate
     private LocalDateTime updated_at;
 
@@ -49,7 +51,19 @@ public class Board {
         boardTags.add(boardTag);
     }
 
+<<<<<<< HEAD
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Bookmark> bookmarks = new ArrayList<>();
+=======
+    public void removeBoardTag(BoardTag boardTag) {
+        boardTags.remove(boardTag);
+        boardTag.setBoard(null);
+    }
+
+    public void updateBoardTitleAndContent(UpdateBoardRequestDto boardRequestDto) {
+        this.title = boardRequestDto.getTitle();
+        this.content = boardRequestDto.getContent();
+    }
+>>>>>>> d6ffdd797c7419fc7f8467fcef15ffeedd76e9b8
 
 }

@@ -2,6 +2,8 @@ package com.example.study_monster_back.comment.entity;
 
 import java.time.LocalDateTime;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -18,6 +20,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Data
 @EntityListeners(AuditingEntityListener.class)
