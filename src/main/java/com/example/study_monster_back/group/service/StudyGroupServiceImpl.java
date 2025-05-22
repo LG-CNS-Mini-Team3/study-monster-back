@@ -17,12 +17,11 @@ import org.springframework.stereotype.Service;
 import com.example.study_monster_back.group.dto.StudyGroupRequestDTO;
 import com.example.study_monster_back.group.dto.StudyGroupResponseDTO;
 import com.example.study_monster_back.group.entity.StudyGroup;
-import com.example.study_monster_back.group.entity.StudyMember;
 import com.example.study_monster_back.group.repository.StudyGroupRepository;
 import com.example.study_monster_back.group.repository.StudyMemberRepository;
+import com.example.study_monster_back.group.entity.StudyMember;
 import com.example.study_monster_back.user.entity.User;
 import com.example.study_monster_back.user.repository.UserRepository;
-
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
@@ -37,18 +36,16 @@ public class StudyGroupServiceImpl implements StudyGroupService {
     private final StudyGroupTagService studyGroupTagService;
     private final TagValidator tagValidator;
 
-
     @Override
     public List<StudyGroupResponseDTO> getAllStudyGroups() {
 
          Map<Long, Long> memberCountMap = studyGroupRepository.countMembersByStudyGroup()
-        .stream()
-        .collect(Collectors.toMap(
-            row -> (Long) row[0],
-            row -> (Long) row[1]
-        ));
+                .stream()
+                .collect(Collectors.toMap(
+                    row -> (Long) row[0],
+                    row -> (Long) row[1]
+                ));
    
-        
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         
         return studyGroupRepository.findAllWithTags().stream()
@@ -59,8 +56,7 @@ public class StudyGroupServiceImpl implements StudyGroupService {
             boolean isFull = currentMembers == limitMembers;
 
             String status = (isDeadlinePassed || isFull) ? "모집완료" : "모집중";
-
-            String formattedDeadline = group.getDeadline().toLocalDate().format(formatter);
+            String formattedDeadline = group.getDeadline().format(formatter);
           
             List<TagResponseDto> tagList = group.getStudyGroupTags().stream()
                     .map(sgt -> TagResponseDto.from(sgt.getTag()))
@@ -76,10 +72,40 @@ public class StudyGroupServiceImpl implements StudyGroupService {
                 formattedDeadline,          
                 status,
                 currentMembers,
-                group.getCreator().getNickname(),           // nickname
-                "/images/monster.png"); 
+                group.getCreator().getNickname()  
+                ); 
         })
          .collect(Collectors.toList());
+    }
+
+    @Override
+    public StudyGroupResponseDTO getById(Long id) {
+        StudyGroup group = studyGroupRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("스터디 없음"));
+        int current = studyMemberRepository.countMembersByStudyGroup(group);
+
+        boolean isDeadlinePassed = LocalDateTime.now().isAfter(group.getDeadline());
+        boolean isFull = current >= group.getLimit_members();
+
+        String status = (isDeadlinePassed || isFull) ? "모집완료" : "모집중";
+        String formattedDeadline = group.getDeadline().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        List<TagResponseDto> tagList = group.getStudyGroupTags().stream()
+                    .map(sgt -> TagResponseDto.from(sgt.getTag()))
+                    .toList();
+
+        return new StudyGroupResponseDTO(
+            group.getId(),                          
+            group.getName(),                      
+            tagList,                    
+            group.getCreated_at(),                
+            group.getDescription(),                  
+            group.getLimit_members(),                
+            formattedDeadline, 
+            status,                                 
+            current,                                
+            group.getCreator().getNickname()
+        );
     }
     
     @Override
@@ -108,7 +134,6 @@ public class StudyGroupServiceImpl implements StudyGroupService {
         throw new IllegalArgumentException("스터디 설명을 입력해 주세요.");
     }
 
-
     // StudyGroup 생성
     StudyGroup group = new StudyGroup();
     group.setName(dto.getName());
@@ -135,6 +160,4 @@ public class StudyGroupServiceImpl implements StudyGroupService {
     }
 
 }
-
-
 }

@@ -6,7 +6,8 @@ import com.example.study_monster_back.group.dto.StudyGroupRequestDTO;
 import com.example.study_monster_back.group.dto.StudyGroupResponseDTO;
 
 public interface StudyGroupService {
-    List<StudyGroupResponseDTO> getAllStudyGroups();
+    List<StudyGroupResponseDTO> getAllStudyGroups();    
+    StudyGroupResponseDTO getById(Long studyId);
     void create(StudyGroupRequestDTO dto, Long userId);
 
 }

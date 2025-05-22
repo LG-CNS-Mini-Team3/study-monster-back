@@ -23,8 +23,4 @@ public class StudyGroupResponseDTO {
     private String status;
     private int current;
     private String nickname;
-    String profileImage = "/images/monster.png"; //프로필 사진 추후 수정
-
-    
-    
 }
