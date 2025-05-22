@@ -32,7 +32,7 @@ public class StudyGroupController {
         List<StudyGroupResponseDTO> studyGroups = studyGroupService.getAllStudyGroups();
         return ResponseEntity.ok(studyGroups);
     }
-    @PostMapping("/new")
+    @PostMapping()
     public ResponseEntity<?> createStudyGroup(
         @RequestBody StudyGroupRequestDTO dto,
         @RequestParam Long userId) { //아이디는 테스트용
