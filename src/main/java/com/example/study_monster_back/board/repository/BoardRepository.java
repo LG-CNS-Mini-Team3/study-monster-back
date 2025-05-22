@@ -7,6 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.example.study_monster_back.board.entity.Board;
+import com.example.study_monster_back.board.dto.db.BoardDetailInfo;
+
+import java.util.Optional;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
     Page<Board> findByTitleContaining(String title, Pageable pageable);
@@ -21,4 +24,15 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "OR LOWER(b.content) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
             "OR LOWER(u.nickname) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     Page<Board> searchByKeyword(@Param("keyword") String keyword, Pageable pageable);
+
+    @Query("""
+            SELECT b board, u writer
+            FROM Board b
+            LEFT JOIN User u ON (b.user = u)
+            where b.id = :boardId
+            """)
+    Optional<BoardDetailInfo> getBoardByIdWithUser(Long boardId);
+
+    @Query("SELECT b FROM Board b LEFT JOIN FETCH b.boardTags bt LEFT JOIN FETCH bt.tag Where b.id = :id")
+    Optional<Board> findByIdWithTags(@Param("id") Long id);
 }

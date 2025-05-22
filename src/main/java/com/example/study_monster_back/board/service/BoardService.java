@@ -1,43 +1,26 @@
 package com.example.study_monster_back.board.service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import com.example.study_monster_back.board.dto.response.BoardResponse;
-import com.example.study_monster_back.board.entity.Board;
-import com.example.study_monster_back.board.repository.BoardRepository;
+import com.example.study_monster_back.board.dto.request.UpdateBoardRequestDto;
+import com.example.study_monster_back.board.dto.response.GetBoardResponseDto;
+import com.example.study_monster_back.board.dto.request.CreateBoardRequestDto;
+import com.example.study_monster_back.board.dto.response.CreateBoardResponseDto;
+import com.example.study_monster_back.board.dto.response.UpdateBoardResponseDto;
+import com.example.study_monster_back.tag.dto.response.TagResponseDto;
+import com.example.study_monster_back.board.dto.response.StudyFeedbackResponse;
 
-@Service
-public class BoardService {
-    private final BoardRepository boardRepository;
+import java.util.List;
 
-    public BoardService(BoardRepository boardRepository) {
-        this.boardRepository = boardRepository;
-    }
+public interface BoardService {
 
-    public Page<BoardResponse> getBoards(String keyword, String type, Pageable pageable) {
-        Page<Board> boards;
+    StudyFeedbackResponse getStudyFeedback(Long boardId);
 
-        if (keyword == null || keyword.trim().isEmpty()) {
-            boards = boardRepository.findAll(pageable);
-        } else {
-            switch (type) {
-                case "title":
-                    boards = boardRepository.findByTitleContaining(keyword, pageable);
-                    break;
-                case "content":
-                    boards = boardRepository.findByContentContaining(keyword, pageable);
-                    break;
-                case "nickname":
-                    boards = boardRepository.findByWriterContaining(keyword, pageable);
-                    break;
-                case "all":
-                default:
-                    boards = boardRepository.searchByKeyword(keyword, pageable);
-                    break;
-            }
-        }
+    GetBoardResponseDto getBoard(Long boardId);
 
-        return boards.map(BoardResponse::from);
-    }
+    CreateBoardResponseDto createBoard(CreateBoardRequestDto boardRequestDto);
+
+    UpdateBoardResponseDto updateBoard(Long boardId, UpdateBoardRequestDto boardRequestDto);
+
+    void deleteBoard(Long boardId);
+
+    List<TagResponseDto> getBoardTags(Long boardId);
 }
