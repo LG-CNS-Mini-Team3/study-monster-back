@@ -13,7 +13,7 @@ public class BoardResponse {
     private Long id;
     private String title;
     private String content;
-    private String writer;
+    private String nickname;
     private LocalDateTime created_at;
 
     public static BoardResponse from(Board board) {
