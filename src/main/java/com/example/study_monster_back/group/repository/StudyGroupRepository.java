@@ -30,5 +30,6 @@ public interface StudyGroupRepository extends JpaRepository<StudyGroup, Long> {
     @Query(value = "SELECT DISTINCT sg FROM StudyGroup sg LEFT JOIN FETCH sg.studyGroupTags sgt LEFT JOIN FETCH sgt.tag",
             countQuery = "SELECT COUNT(DISTINCT sg) FROM StudyGroup sg")
     Page<StudyGroup> findAllWithTags(Pageable pageable);
+
     
 }

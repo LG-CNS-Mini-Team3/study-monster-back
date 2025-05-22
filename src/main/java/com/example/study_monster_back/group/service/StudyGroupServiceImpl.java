@@ -37,6 +37,7 @@ public class StudyGroupServiceImpl implements StudyGroupService {
     private final StudyGroupTagService studyGroupTagService;
     private final TagValidator tagValidator;
 
+
     @Override
     public List<StudyGroupResponseDTO> getAllStudyGroups() {
 
@@ -60,6 +61,7 @@ public class StudyGroupServiceImpl implements StudyGroupService {
             String status = (isDeadlinePassed || isFull) ? "모집완료" : "모집중";
 
             String formattedDeadline = group.getDeadline().toLocalDate().format(formatter);
+          
             List<TagResponseDto> tagList = group.getStudyGroupTags().stream()
                     .map(sgt -> TagResponseDto.from(sgt.getTag()))
                     .toList();
@@ -85,6 +87,7 @@ public class StudyGroupServiceImpl implements StudyGroupService {
     public void create(StudyGroupRequestDTO dto, Long userId) {
 
      //사용자 조회
+
      User creator = userRepository.findById(userId)
         .orElseThrow(() -> new RuntimeException("사용자 없음"));
 
@@ -124,11 +127,13 @@ public class StudyGroupServiceImpl implements StudyGroupService {
 
     studyMemberRepository.save(member);
 
+
     for (String tagName : tagValidator.filterValidTags(dto.getTags())) {
         Tag tag = tagService.findOrCreateTag(tagName);
         StudyGroupTag studyGroupTag = studyGroupTagService.createStudyGroupTag(group, tag);
         group.addStudyGroupTag(studyGroupTag);
     }
+
 }
 
 

@@ -1,5 +1,6 @@
 package com.example.study_monster_back.group.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +32,14 @@ public class StudyGroupController {
     public ResponseEntity<List<StudyGroupResponseDTO>> getList() {
         List<StudyGroupResponseDTO> studyGroups = studyGroupService.getAllStudyGroups();
         return ResponseEntity.ok(studyGroups);
+    }
+    @PostMapping("/create")
+    public ResponseEntity<?> createStudyGroup(
+        @RequestBody StudyGroupRequestDTO dto,
+        @RequestParam Long userId) { //아이디는 테스트용
+
+        studyGroupService.create(dto, userId);
+        return ResponseEntity.ok(Map.of("message", "스터디 생성 완료"));
     }
 
     @PostMapping()

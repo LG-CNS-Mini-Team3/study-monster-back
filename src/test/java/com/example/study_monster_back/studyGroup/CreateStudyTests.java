@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+
 import com.example.study_monster_back.tag.repository.StudyGroupTagRepository;
 import com.example.study_monster_back.tag.repository.TagRepository;
 import com.example.study_monster_back.tag.service.StudyGroupTagService;
@@ -51,6 +52,7 @@ public class CreateStudyTests {
         studyGroupService = new StudyGroupServiceImpl(
                 studyGroupRepository, userRepository, studyMemberRepository,
                 tagService, studyGroupTagService, tagValidator
+
         );
     }
 
