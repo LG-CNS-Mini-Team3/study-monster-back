@@ -1,5 +1,6 @@
 package com.example.study_monster_back.board.entity;
 
+import com.example.study_monster_back.board.dto.request.UpdateBoardRequestDto;
 import com.example.study_monster_back.tag.entity.BoardTag;
 import com.example.study_monster_back.user.entity.User;
 import jakarta.persistence.*;
@@ -30,10 +31,8 @@ public class Board {
 
     @Column(columnDefinition = "TEXT")
     private String content;
-
     @CreatedDate
     private LocalDateTime created_at;
-
     @LastModifiedDate
     private LocalDateTime updated_at;
 
@@ -46,6 +45,16 @@ public class Board {
 
     public void addBoardTag(BoardTag boardTag) {
         boardTags.add(boardTag);
+    }
+
+    public void removeBoardTag(BoardTag boardTag) {
+        boardTags.remove(boardTag);
+        boardTag.setBoard(null);
+    }
+
+    public void updateBoardTitleAndContent(UpdateBoardRequestDto boardRequestDto) {
+        this.title = boardRequestDto.getTitle();
+        this.content = boardRequestDto.getContent();
     }
 
 }
