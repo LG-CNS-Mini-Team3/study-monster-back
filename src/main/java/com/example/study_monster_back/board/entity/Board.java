@@ -1,10 +1,6 @@
 package com.example.study_monster_back.board.entity;
 
-<<<<<<< HEAD
-import com.example.study_monster_back.bookmark.entity.Bookmark;
-=======
 import com.example.study_monster_back.board.dto.request.UpdateBoardRequestDto;
->>>>>>> d6ffdd797c7419fc7f8467fcef15ffeedd76e9b8
 import com.example.study_monster_back.tag.entity.BoardTag;
 import com.example.study_monster_back.user.entity.User;
 import jakarta.persistence.*;
