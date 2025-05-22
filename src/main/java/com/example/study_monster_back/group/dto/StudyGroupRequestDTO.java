@@ -1,7 +1,7 @@
 package com.example.study_monster_back.group.dto;
 
 import java.time.LocalDateTime;
-
+import java.util.List;
 import lombok.Data;
 
 @Data
@@ -12,6 +12,6 @@ public class StudyGroupRequestDTO {
     private Integer limit_members;
     private LocalDateTime deadline;
     private String nickname;
-    //todo 태그 추후 추가
+    private List<String> tags;
     
 }

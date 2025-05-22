@@ -8,6 +8,14 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+
+import com.example.study_monster_back.tag.repository.StudyGroupTagRepository;
+import com.example.study_monster_back.tag.repository.TagRepository;
+import com.example.study_monster_back.tag.service.StudyGroupTagService;
+import com.example.study_monster_back.tag.service.StudyGroupTagServiceImpl;
+import com.example.study_monster_back.tag.service.TagService;
+import com.example.study_monster_back.tag.service.TagServiceImpl;
+import com.example.study_monster_back.tag.util.TagValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,14 +32,27 @@ public class CreateStudyTests {
     private UserRepository userRepository;
     private StudyMemberRepository studyMemberRepository;
     private StudyGroupServiceImpl studyGroupService;
+    private TagService tagService;
+    private StudyGroupTagService studyGroupTagService;
+    private TagValidator tagValidator;
+    private TagRepository tagRepository;
+    private StudyGroupTagRepository studyGroupTagRepository;
+
 
     @BeforeEach
     void setUp() {
         studyGroupRepository = mock(StudyGroupRepository.class);
         userRepository = mock(UserRepository.class);
         studyMemberRepository = mock(StudyMemberRepository.class);
+        tagRepository = mock(TagRepository.class);
+        tagService = new TagServiceImpl(tagRepository);
+        studyGroupTagRepository = mock(StudyGroupTagRepository.class);
+        studyGroupTagService = new StudyGroupTagServiceImpl(studyGroupTagRepository);
+        tagValidator = new TagValidator();
         studyGroupService = new StudyGroupServiceImpl(
-                studyGroupRepository, userRepository, studyMemberRepository
+                studyGroupRepository, userRepository, studyMemberRepository,
+                tagService, studyGroupTagService, tagValidator
+
         );
     }
 

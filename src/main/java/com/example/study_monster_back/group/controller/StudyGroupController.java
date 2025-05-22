@@ -27,12 +27,12 @@ public class StudyGroupController {
 
     private final StudyGroupService studyGroupService;
 
-    @GetMapping
+    @GetMapping()
     public ResponseEntity<List<StudyGroupResponseDTO>> getList() {
         List<StudyGroupResponseDTO> studyGroups = studyGroupService.getAllStudyGroups();
         return ResponseEntity.ok(studyGroups);
     }
-    @PostMapping("/create")
+    @PostMapping("/new")
     public ResponseEntity<?> createStudyGroup(
         @RequestBody StudyGroupRequestDTO dto,
         @RequestParam Long userId) { //아이디는 테스트용
@@ -44,6 +44,5 @@ public class StudyGroupController {
     @GetMapping("/{studyId}")
     public ResponseEntity<StudyGroupResponseDTO> getStudyGroupById(@PathVariable Long studyId) {
     return ResponseEntity.ok(studyGroupService.getById(studyId));
-}
-
+    }
 }
