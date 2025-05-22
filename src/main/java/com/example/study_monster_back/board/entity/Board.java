@@ -1,5 +1,6 @@
 package com.example.study_monster_back.board.entity;
 
+import com.example.study_monster_back.bookmark.entity.Bookmark;
 import com.example.study_monster_back.tag.entity.BoardTag;
 import com.example.study_monster_back.user.entity.User;
 import jakarta.persistence.*;
@@ -47,5 +48,8 @@ public class Board {
     public void addBoardTag(BoardTag boardTag) {
         boardTags.add(boardTag);
     }
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Bookmark> bookmarks = new ArrayList<>();
 
 }
