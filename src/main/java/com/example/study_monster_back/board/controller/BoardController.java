@@ -1,20 +1,16 @@
 package com.example.study_monster_back.board.controller;
 
+import com.example.study_monster_back.board.dto.response.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.study_monster_back.board.dto.response.BoardResponse;
-import com.example.study_monster_back.board.service.BoardSearchService;
+import com.example.study_monster_back.board.service.BoardSearchServiceImpl;
 import com.example.study_monster_back.board.service.BoardService;
 import com.example.study_monster_back.board.dto.request.CreateBoardRequestDto;
 import com.example.study_monster_back.board.dto.request.UpdateBoardRequestDto;
-import com.example.study_monster_back.board.dto.response.CreateBoardResponseDto;
-import com.example.study_monster_back.board.dto.response.GetBoardResponseDto;
-import com.example.study_monster_back.board.dto.response.UpdateBoardResponseDto;
-import com.example.study_monster_back.board.dto.response.StudyFeedbackResponse;
 import com.example.study_monster_back.tag.dto.response.TagResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,7 +27,7 @@ import java.util.List;
 @RestController
 public class BoardController {
     private final BoardService boardService;
-    private final BoardSearchService boardSearchService;
+    private final BoardSearchServiceImpl boardSearchService;
 
     @GetMapping
     public Page<BoardResponse> boardList(
@@ -85,4 +81,17 @@ public class BoardController {
     public ResponseEntity<StudyFeedbackResponse> getStudyFeedback(@PathVariable Long boardId) {
         return ResponseEntity.ok(boardService.getStudyFeedback(boardId));
     }
+
+    @GetMapping("/search/tags")
+    @Operation(summary = "태그로 게시글 조회", description = "해당 태그들을 하나라도 가진 게시글을 조회합니다.")
+    public ResponseEntity<Page<BoardWithTagsResponseDto>> searchByTags(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) List<String> tags) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
+
+        return ResponseEntity.ok(boardSearchService.getBoardsByTags(tags, pageable));
+    }
+
 }
