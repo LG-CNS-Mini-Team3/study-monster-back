@@ -1,8 +1,8 @@
 package com.example.study_monster_back.board.service;
 
+import com.example.study_monster_back.board.dto.request.UpdateBoardRequestDto;
 import com.example.study_monster_back.board.dto.response.StudyFeedbackResponse;
 import com.example.study_monster_back.board.dto.request.CreateBoardRequestDto;
-import com.example.study_monster_back.board.dto.request.UpdateBoardRequestDto;
 import com.example.study_monster_back.board.dto.response.CreateBoardResponseDto;
 import com.example.study_monster_back.board.dto.response.GetBoardResponseDto;
 import com.example.study_monster_back.board.dto.response.UpdateBoardResponseDto;
@@ -28,14 +28,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
-
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
@@ -82,7 +81,7 @@ public class BoardServiceImpl implements BoardService {
 
         // TODO: userId 시큐리티컨텍스트에서 받아서 자신의 게시글이 맞는지 확인해야 함.
         Board board = boardRepository.findByIdWithTags(boardId)
-                .orElseThrow(() -> new IllegalArgumentException("Board not found with ID: " + boardId));
+            .orElseThrow(() -> new IllegalArgumentException("Board not found with ID: " + boardId));
 
         User user = getUserOrThrow(boardRequestDto.getUserId());
         if(!board.getUser().getId().equals(user.getId())) {
@@ -93,8 +92,8 @@ public class BoardServiceImpl implements BoardService {
 
         Set<String> updateTagNames =  tagValidator.filterValidTags(boardRequestDto.getTags());
         Set<String> existingTagNames = board.getBoardTags().stream()
-                .map(bt -> bt.getTag().getName())
-                .collect(Collectors.toSet());
+            .map(bt -> bt.getTag().getName())
+            .collect(Collectors.toSet());
 
         for (BoardTag boardTag : new ArrayList<>(board.getBoardTags())) {
             if (!updateTagNames.contains(boardTag.getTag().getName())) {
@@ -119,7 +118,7 @@ public class BoardServiceImpl implements BoardService {
     public void deleteBoard(Long boardId) {
 
         Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new IllegalArgumentException("Board not found with ID: " + boardId));
+            .orElseThrow(() -> new IllegalArgumentException("Board not found with ID: " + boardId));
         // TODO: userId 시큐리티컨텍스트에서 받아서 자신의 게시글이 맞는지 확인해야 함.
 
         commentRepository.deleteAllByBoard(board);
@@ -133,21 +132,24 @@ public class BoardServiceImpl implements BoardService {
     public List<TagResponseDto> getBoardTags(Long boardId) {
 
         Board board = boardRepository.findByIdWithTags(boardId)
-                .orElseThrow(() -> new IllegalArgumentException("Board not found with ID: " + boardId));
+            .orElseThrow(() -> new IllegalArgumentException("Board not found with ID: " + boardId));
 
         List<TagResponseDto> tagResponseDtoList = board.getBoardTags().stream()
-                .map(bt -> TagResponseDto.from(bt.getTag()))
-                .collect(Collectors.toList());
+            .map(bt -> TagResponseDto.from(bt.getTag()))
+            .collect(Collectors.toList());
 
         return tagResponseDtoList;
     }
 
+    @Override
+    @Transactional
     public StudyFeedbackResponse getStudyFeedback(Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow(() ->
             new RuntimeException("해당 id를 가진 게시글이 없습니다.")
         );
         Optional<Feedback> optionalFeedback = feedbackRepository.findByBoard(board);
         if (optionalFeedback.isEmpty() || optionalFeedback.get().getCreated_at().isBefore(board.getUpdated_at())) {
+            optionalFeedback.ifPresent(feedback -> feedbackRepository.deleteById(feedback.getId()));
             OpenAiStudyFeedbackResponse studyFeedback = openAiService.getStudyFeedback(board.getTitle(), board.getContent());
             Feedback feedback = feedbackRepository.save(
                 Feedback.builder()
@@ -161,7 +163,7 @@ public class BoardServiceImpl implements BoardService {
         return new StudyFeedbackResponse(optionalFeedback.get());
 
     }
-  
+
     private User getUserOrThrow(Long userId) {
 
         User user = userRepository.findById(userId)
