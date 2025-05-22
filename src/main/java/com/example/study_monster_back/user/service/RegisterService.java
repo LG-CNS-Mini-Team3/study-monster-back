@@ -39,7 +39,7 @@ public class RegisterService {
             user.setPwd(encryptPwd);
         }
         else{
-            throw new IllegalArgumentException("유효하지 않은 비밀번호입니다.");
+            throw new IllegalArgumentException("비밀번호와 비밀번호 확인이 일치하지 않거나 유효하지 않은 비밀번호입니다.");
         }
         user.setRole("ROLE_USER");
         userRepository.save(user);

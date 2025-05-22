@@ -33,6 +33,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Slf4j
 @RestController
@@ -94,6 +96,7 @@ public class UserController {
                     .body(new UserInfoResponseDto(null, e.getMessage(), null));
         }
     }
+    
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout() {
@@ -129,7 +132,7 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/signout")
+    @DeleteMapping("/delete")
     public ResponseEntity<?> signOut(@RequestHeader("Authorization") String token) {
         String jwtToken = token.substring(7);
         String email = jwtTokenProvider.extractEmail(jwtToken);

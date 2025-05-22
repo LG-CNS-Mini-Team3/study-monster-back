@@ -20,5 +20,4 @@ public class User implements Serializable{
     private String nickname;
     private String phone_number;
     private String role;
-
 }
