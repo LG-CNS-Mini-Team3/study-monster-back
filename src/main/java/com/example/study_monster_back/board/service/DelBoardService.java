@@ -3,6 +3,7 @@ package com.example.study_monster_back.board.service;
 import java.nio.file.AccessDeniedException;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.study_monster_back.board.entity.Board;
 import com.example.study_monster_back.board.repository.BoardRepository;
@@ -21,6 +22,7 @@ public class DelBoardService {
         this.userRepository = userRepository;
     }
 
+    @Transactional
     public void deleteBoard(Long boardId, Long requestUserId) throws AccessDeniedException {
         User user = userRepository.findById(requestUserId)
                 .orElseThrow(() -> new EntityNotFoundException("유저를 찾을 수 없습니다."));

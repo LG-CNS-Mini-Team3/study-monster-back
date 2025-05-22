@@ -1,12 +1,9 @@
 package com.example.study_monster_back.board.controller;
 
 import java.nio.file.AccessDeniedException;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
-import com.example.study_monster_back.board.dto.request.BoardRequest;
 import com.example.study_monster_back.board.dto.response.BoardResponse;
-import com.example.study_monster_back.board.entity.Board;
 import com.example.study_monster_back.board.repository.BoardRepository;
 import com.example.study_monster_back.board.service.DelBoardService;
 
@@ -25,19 +22,19 @@ public class DelBoardController {
         this.boardRepository = boardRepository;
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<?> getAllBoards() {
-        List<Board> boards = boardRepository.findAll();
-        List<BoardResponse> result = boards.stream()
-                .map(BoardResponse::from)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(result);
+    @GetMapping("/{boardId}")
+    public ResponseEntity<?> getBoardById(@PathVariable Long boardId) {
+        return boardRepository.findById(boardId)
+                .map(board -> ResponseEntity.ok(BoardResponse.from(board)))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<?> deleteBoard(@RequestBody BoardRequest request) {
+    public ResponseEntity<?> deleteBoard(@RequestBody Map<String, Long> request) {
+        Long boardId = request.get("boardId");
+        Long userId = request.get("userId");
         try {
-            delBoardService.deleteBoard(request.getBoardId(), request.getUserId());
+            delBoardService.deleteBoard(boardId, userId);
             return ResponseEntity.ok("게시글이 삭제되었습니다.");
         } catch (AccessDeniedException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("삭제 권한이 없습니다.");
