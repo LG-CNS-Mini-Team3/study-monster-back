@@ -3,6 +3,7 @@ package com.example.study_monster_back.group.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.example.study_monster_back.tag.dto.response.TagResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,7 @@ public class StudyGroupResponseDTO {
 
     private Long id;
     private String name;
-    List<String> tags;
+    private List<TagResponseDto> tagList;
     private LocalDateTime created_at;
     private String description;
     private Integer limit_members;
@@ -22,8 +23,4 @@ public class StudyGroupResponseDTO {
     private String status;
     private int current;
     private String nickname;
-    String profileImage = "/images/monster.png"; //프로필 사진 추후 수정
-
-    
-    
 }
