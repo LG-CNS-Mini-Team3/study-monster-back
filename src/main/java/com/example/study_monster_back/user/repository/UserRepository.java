@@ -9,7 +9,7 @@ import com.example.study_monster_back.user.entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User,Long>{
-    Optional<User> findByEmail(String email);//email로 유저 찾는 로직
+    Optional<User> findByEmail(String email);
     boolean existsByEmail(String email);
     boolean existsByNickname(String nickname);
 }
