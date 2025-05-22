@@ -22,18 +22,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
-@RequestMapping("/study-group")
+@RequestMapping("/study-groups")
 @RequiredArgsConstructor
 public class StudyGroupController {
 
     private final StudyGroupService studyGroupService;
 
-    @GetMapping("/")
+    @GetMapping()
     public ResponseEntity<List<StudyGroupResponseDTO>> getList() {
         List<StudyGroupResponseDTO> studyGroups = studyGroupService.getAllStudyGroups();
         return ResponseEntity.ok(studyGroups);
     }
     @PostMapping("/create")
+    public ResponseEntity<?> createStudyGroup(
+        @RequestBody StudyGroupRequestDTO dto,
+        @RequestParam Long userId) { //아이디는 테스트용
+
+        studyGroupService.create(dto, userId);
+        return ResponseEntity.ok(Map.of("message", "스터디 생성 완료"));
+    }
+
+    @PostMapping()
     public ResponseEntity<?> createStudyGroup(
         @RequestBody StudyGroupRequestDTO dto,
         @RequestParam Long userId) { //아이디는 테스트용
