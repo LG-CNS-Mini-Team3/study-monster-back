@@ -47,19 +47,12 @@ public class BoardController {
 
     @GetMapping("/{boardId}")
     public ResponseEntity<GetBoardResponseDto> getBoard(
-            @PathVariable(value = "boardId") Long boardId) {
-
-    @GetMapping("/{boardId}")
-    public ResponseEntity<GetBoardResponseDto> getBoard(
         @PathVariable(value = "boardId") Long boardId
     ) {
         return ResponseEntity.ok(boardService.getBoard(boardId));
     }
 
     @PostMapping
-    @Operation(summary = "게시글 작성", description = "게시글을 작성하고, 해당 게시글의 해시태그도 소문자로 변환하여 저장합니다.")
-    public ResponseEntity<CreateBoardResponseDto> createBoard(
-            @Valid @RequestBody CreateBoardRequestDto boardRequestDto) {
     @Operation(summary = "게시글 작성",
         description = "게시글을 작성하고, 해당 게시글의 해시태그도 소문자로 변환하여 저장합니다.")
     public ResponseEntity<CreateBoardResponseDto> createBoard(@Valid @RequestBody CreateBoardRequestDto boardRequestDto) {
@@ -70,10 +63,6 @@ public class BoardController {
 
     @PutMapping("/{boardId}")
     @Operation(summary = "게시글 수정", description = "게시글과 게시글 태그를 수정합니다.")
-    public ResponseEntity<UpdateBoardResponseDto> updateBoard(@PathVariable Long boardId,
-            @Valid @RequestBody UpdateBoardRequestDto boardRequestDto) {
-        // TODO: 추후에 @AuthenticationPrincipal로 유저 정보 가져와서 자신의 게시글인 경우에만 수정
-        UpdateBoardResponseDto updateBoardResponseDto = boardService.updateBoard(boardId, boardRequestDto);
     public ResponseEntity<UpdateBoardResponseDto> updateBoard(@PathVariable Long boardId, @Valid @RequestBody UpdateBoardRequestDto boardRequestDto) {
         // TODO: 추후에 @AuthenticationPrincipal로 유저 정보 가져와서 자신의 게시글인 경우에만 수정
         UpdateBoardResponseDto updateBoardResponseDto = boardService.updateBoard(boardId,boardRequestDto);
