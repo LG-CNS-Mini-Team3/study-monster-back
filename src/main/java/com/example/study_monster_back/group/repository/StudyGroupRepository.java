@@ -27,9 +27,9 @@ public interface StudyGroupRepository extends JpaRepository<StudyGroup, Long> {
     @Query("SELECT DISTINCT sg FROM StudyGroup sg LEFT JOIN FETCH sg.studyGroupTags sgt LEFT JOIN FETCH sgt.tag")
     List<StudyGroup> findAllWithTags();
 
-    @Query(value = "SELECT DISTINCT sg FROM StudyGroup sg LEFT JOIN FETCH sg.studyGroupTags sgt LEFT JOIN FETCH sgt.tag",
-            countQuery = "SELECT COUNT(DISTINCT sg) FROM StudyGroup sg")
+    @Query("SELECT DISTINCT sg FROM StudyGroup sg LEFT JOIN FETCH sg.studyGroupTags sgt LEFT JOIN FETCH sgt.tag")
     Page<StudyGroup> findAllWithTags(Pageable pageable);
 
-    
+    @Query("SELECT DISTINCT sg FROM StudyGroup sg JOIN sg.studyGroupTags sgt JOIN sgt.tag t WHERE LOWER(t.name) IN :tags")
+    Page<StudyGroup> findByAnyTags(@Param("tags") List<String> tags, Pageable pageable);
 }

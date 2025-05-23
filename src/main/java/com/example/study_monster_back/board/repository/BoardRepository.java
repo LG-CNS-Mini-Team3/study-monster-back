@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import com.example.study_monster_back.board.entity.Board;
 import com.example.study_monster_back.board.dto.db.BoardDetailInfo;
 
+import java.util.List;
 import java.util.Optional;
 import com.example.study_monster_back.board.dto.db.BoardDetailInfo;
 import com.example.study_monster_back.board.entity.Board;
@@ -44,4 +45,12 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "OR LOWER(b.content) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
             "OR LOWER(u.nickname) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     Page<Board> searchByKeyword(@Param("keyword") String keyword, Pageable pageable);
+
+    @Query("SELECT DISTINCT b FROM Board b LEFT JOIN FETCH b.boardTags bt LEFT JOIN FETCH bt.tag")
+    Page<Board> findAllWithTags(Pageable pageable);
+
+    @Query("SELECT DISTINCT b FROM Board b JOIN b.boardTags bt JOIN bt.tag t WHERE LOWER(t.name) IN :tags")
+    Page<Board> findByAnyTags(@Param("tags") List<String> tags, Pageable pageable);
+
+
 }
