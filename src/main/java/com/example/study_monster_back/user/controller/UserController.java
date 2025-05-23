@@ -93,7 +93,7 @@ public class UserController {
         } catch (IllegalArgumentException e) {
             log.warn("사용자 정보를 찾을 수 없습니다 (getUserInfo): {}", email, e);
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new UserInfoResponseDto(null, e.getMessage(), null));
+                    .body(new UserInfoResponseDto(null, null, e.getMessage(), null));
         }
     }
     

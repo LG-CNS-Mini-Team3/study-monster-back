@@ -70,7 +70,7 @@ public class CreateStudyTests {
 
         // when & then
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
-                () -> studyGroupService.create(dto, 1L));
+                () -> studyGroupService.create(dto, "1L"));
         assertEquals("모집 인원은 2명 이상이어야 합니다.", ex.getMessage());
     }
 
@@ -86,7 +86,7 @@ public class CreateStudyTests {
         when(userRepository.findById(1L)).thenReturn(Optional.of(mockUser));
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
-                () -> studyGroupService.create(dto, 1L));
+                () -> studyGroupService.create(dto, "1L"));
         assertEquals("모집 마감일은 현재 시각 이후여야 합니다.", ex.getMessage());
     }
 
@@ -102,7 +102,7 @@ public class CreateStudyTests {
         when(userRepository.findById(1L)).thenReturn(Optional.of(mockUser));
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
-                () -> studyGroupService.create(dto, 1L));
+                () -> studyGroupService.create(dto, "1L"));
         assertEquals("스터디 제목을 입력해 주세요.", ex.getMessage());
     }
 
@@ -118,7 +118,7 @@ public class CreateStudyTests {
         when(userRepository.findById(1L)).thenReturn(Optional.of(mockUser));
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
-                () -> studyGroupService.create(dto, 1L));
+                () -> studyGroupService.create(dto, "1L"));
         assertEquals("스터디 설명을 입력해 주세요.", ex.getMessage());
     }
     

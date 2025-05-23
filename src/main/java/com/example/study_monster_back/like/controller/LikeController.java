@@ -2,6 +2,7 @@ package com.example.study_monster_back.like.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,8 +31,8 @@ public class LikeController {
         return ResponseEntity.ok("추가 완료");
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/get")
-    public ResponseEntity<LikeCount_OUT> getCount(@RequestParam Long boardId) {
+    @RequestMapping(method = RequestMethod.GET, value = "/get/{boardId}")
+    public ResponseEntity<LikeCount_OUT> getCount(@PathVariable(value = "boardId") Long boardId) {
 
         LikeCount_OUT count = likeService.getCount(boardId);
 
