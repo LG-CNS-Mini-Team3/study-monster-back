@@ -52,4 +52,5 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query("SELECT DISTINCT b FROM Board b JOIN b.boardTags bt JOIN bt.tag t WHERE LOWER(t.name) IN :tags")
     Page<Board> findByAnyTags(@Param("tags") List<String> tags, Pageable pageable);
 
+
 }

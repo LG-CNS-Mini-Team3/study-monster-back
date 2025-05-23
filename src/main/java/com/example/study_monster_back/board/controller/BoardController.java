@@ -57,8 +57,8 @@ public class BoardController {
     @Operation(summary = "게시글 수정", description = "게시글과 게시글 태그를 수정합니다.")
     public ResponseEntity<UpdateBoardResponseDto> updateBoard(@PathVariable Long boardId,
                                                               @Valid @RequestBody UpdateBoardRequestDto boardRequestDto) {
-        // TODO: 추후에 @AuthenticationPrincipal로 유저 정보 가져와서 자신의 게시글인 경우에만 수정
-        UpdateBoardResponseDto updateBoardResponseDto = boardService.updateBoard(boardId, boardRequestDto);
+        UpdateBoardResponseDto updateBoardResponseDto = boardService.updateBoard(boardId,boardRequestDto);
+
         return ResponseEntity.ok(updateBoardResponseDto);
     }
 
