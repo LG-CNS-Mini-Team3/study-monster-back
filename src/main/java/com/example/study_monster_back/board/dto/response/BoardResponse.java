@@ -15,6 +15,7 @@ public class BoardResponse {
     private String content;
     private String nickname;
     private LocalDateTime created_at;
+    private Long userId;
 
     public static BoardResponse from(Board board) {
         return new BoardResponse(
@@ -22,6 +23,8 @@ public class BoardResponse {
                 board.getTitle(),
                 board.getContent(),
                 board.getUser() != null ? board.getUser().getNickname() : "알 수 없음",
-                board.getCreated_at());
+                board.getCreated_at(),
+                board.getUser() != null ? board.getUser().getId() : null
+        );
     }
 }
