@@ -16,11 +16,11 @@ public interface BoardService {
 
     GetBoardResponseDto getBoard(Long boardId);
 
-    CreateBoardResponseDto createBoard(CreateBoardRequestDto boardRequestDto);
+    CreateBoardResponseDto createBoard(CreateBoardRequestDto boardRequestDto, String email);
 
-    UpdateBoardResponseDto updateBoard(Long boardId, UpdateBoardRequestDto boardRequestDto);
+    UpdateBoardResponseDto updateBoard(Long boardId, UpdateBoardRequestDto boardRequestDto, String email);
 
-    void deleteBoard(Long boardId);
+    void deleteBoard(Long boardId, String email);
 
     List<TagResponseDto> getBoardTags(Long boardId);
 }
