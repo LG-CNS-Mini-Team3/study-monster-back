@@ -110,11 +110,11 @@ public class StudyGroupServiceImpl implements StudyGroupService {
     
     @Override
     @Transactional
-    public void create(StudyGroupRequestDTO dto, Long userId) {
+    public void create(StudyGroupRequestDTO dto, String email) {
 
      //사용자 조회
 
-     User creator = userRepository.findById(userId)
+     User creator = userRepository.findByEmail(email)
         .orElseThrow(() -> new RuntimeException("사용자 없음"));
 
 
@@ -160,4 +160,11 @@ public class StudyGroupServiceImpl implements StudyGroupService {
     }
 
 }
+
+    @Override
+    public Long findUserIdByEmail(String email) {
+         return userRepository.findByEmail(email)
+        .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"))
+        .getId();
+    }
 }

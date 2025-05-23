@@ -3,6 +3,7 @@ package com.example.study_monster_back.comment.controller;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,8 +32,8 @@ public class CommentController {
         return ResponseEntity.ok("추가 완료");
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/list")
-    public ResponseEntity<List<Comment_INOUT>> listComment(@RequestParam Long boardId){
+    @RequestMapping(method = RequestMethod.GET, value = "/list/{boardId}")
+    public ResponseEntity<List<Comment_INOUT>> listComment(@PathVariable(value = "boardId") Long boardId){
         List<Comment_INOUT> list = commentService.getComments(boardId);
         return ResponseEntity.ok(list);
     }
