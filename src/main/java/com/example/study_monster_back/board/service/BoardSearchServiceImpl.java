@@ -56,6 +56,8 @@ public class BoardSearchServiceImpl implements BoardSearchService {
             boards = boardRepository.findAllWithTags(pageable);
         }
         else {
+            tags = tags.stream().filter(tag -> !tag.trim().isEmpty())
+                    .map(tag -> tag.trim().toLowerCase()).collect(Collectors.toList());
             boards = boardRepository.findByAnyTags(tags, pageable);
         }
         return boards.map(BoardWithTagsResponseDto::from);

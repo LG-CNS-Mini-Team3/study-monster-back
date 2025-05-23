@@ -169,6 +169,8 @@ public class StudyGroupServiceImpl implements StudyGroupService {
         if (tags == null || tags.isEmpty()) {
             studyGroups = studyGroupRepository.findAllWithTags(pageable);
         } else {
+            tags = tags.stream().filter(tag -> !tag.trim().isEmpty())
+                    .map(tag -> tag.trim().toLowerCase()).collect(Collectors.toList());
             studyGroups = studyGroupRepository.findByAnyTags(tags, pageable);
         }
 
