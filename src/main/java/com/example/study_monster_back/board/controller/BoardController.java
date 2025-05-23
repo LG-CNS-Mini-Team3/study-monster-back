@@ -1,5 +1,14 @@
 package com.example.study_monster_back.board.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.web.bind.annotation.*;
+
+import com.example.study_monster_back.board.dto.response.BoardResponse;
+import com.example.study_monster_back.board.service.BoardSearchService;
+import com.example.study_monster_back.board.service.BoardService;
 import com.example.study_monster_back.board.dto.request.CreateBoardRequestDto;
 import com.example.study_monster_back.board.dto.request.UpdateBoardRequestDto;
 import com.example.study_monster_back.board.dto.response.CreateBoardResponseDto;
@@ -24,6 +33,21 @@ import java.util.List;
 @RestController
 public class BoardController {
     private final BoardService boardService;
+    private final BoardSearchService boardSearchService;
+
+    @GetMapping
+    public Page<BoardResponse> boardList(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(name = "keyword", defaultValue = "") String keyword,
+            @RequestParam(defaultValue = "all") String type) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
+        return boardSearchService.getBoards(keyword, type, pageable);
+    }
+
+    @GetMapping("/{boardId}")
+    public ResponseEntity<GetBoardResponseDto> getBoard(
+            @PathVariable(value = "boardId") Long boardId) {
 
     @GetMapping("/{boardId}")
     public ResponseEntity<GetBoardResponseDto> getBoard(
@@ -33,6 +57,9 @@ public class BoardController {
     }
 
     @PostMapping
+    @Operation(summary = "게시글 작성", description = "게시글을 작성하고, 해당 게시글의 해시태그도 소문자로 변환하여 저장합니다.")
+    public ResponseEntity<CreateBoardResponseDto> createBoard(
+            @Valid @RequestBody CreateBoardRequestDto boardRequestDto) {
     @Operation(summary = "게시글 작성",
         description = "게시글을 작성하고, 해당 게시글의 해시태그도 소문자로 변환하여 저장합니다.")
     public ResponseEntity<CreateBoardResponseDto> createBoard(@Valid @RequestBody CreateBoardRequestDto boardRequestDto) {
@@ -43,6 +70,10 @@ public class BoardController {
 
     @PutMapping("/{boardId}")
     @Operation(summary = "게시글 수정", description = "게시글과 게시글 태그를 수정합니다.")
+    public ResponseEntity<UpdateBoardResponseDto> updateBoard(@PathVariable Long boardId,
+            @Valid @RequestBody UpdateBoardRequestDto boardRequestDto) {
+        // TODO: 추후에 @AuthenticationPrincipal로 유저 정보 가져와서 자신의 게시글인 경우에만 수정
+        UpdateBoardResponseDto updateBoardResponseDto = boardService.updateBoard(boardId, boardRequestDto);
     public ResponseEntity<UpdateBoardResponseDto> updateBoard(@PathVariable Long boardId, @Valid @RequestBody UpdateBoardRequestDto boardRequestDto) {
         // TODO: 추후에 @AuthenticationPrincipal로 유저 정보 가져와서 자신의 게시글인 경우에만 수정
         UpdateBoardResponseDto updateBoardResponseDto = boardService.updateBoard(boardId,boardRequestDto);
@@ -63,7 +94,7 @@ public class BoardController {
         List<TagResponseDto> tagResponseDtoList = boardService.getBoardTags(boardId);
         return ResponseEntity.ok(tagResponseDtoList);
     }
-  
+      
     @GetMapping("/{boardId}/feedback")
     public ResponseEntity<StudyFeedbackResponse> getStudyFeedback(@PathVariable Long boardId) {
         return ResponseEntity.ok(boardService.getStudyFeedback(boardId));
