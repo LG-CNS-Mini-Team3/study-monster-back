@@ -27,6 +27,6 @@ public class Comment_INOUT {
         this.content = comment.getContent();
         this.created_at = comment.getCreated_at().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         this.updated_at = comment.getUpdated_at().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        this.username = comment.getUser() != null ? comment.getUser().getName() : null;
+        this.username = comment.getUser() != null ? comment.getUser().getNickname() : null;
     }
 }

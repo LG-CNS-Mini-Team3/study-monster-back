@@ -29,9 +29,9 @@ public class LikeServiceImpl implements LikeService{
         like.setBoard(board);
 
         if(dto.getIs_dislike() == 1){
-            like.setIsDislike(Long.valueOf(1));
+            like.setIsDislike(true);
         } else {
-            like.setIsDislike(Long.valueOf(0));
+            like.setIsDislike(false);
         }
         
         likeRepository.save(like);
@@ -39,8 +39,8 @@ public class LikeServiceImpl implements LikeService{
     }
     public LikeCount_OUT getCount(Long boardId){
 
-        long like = likeRepository.countByBoardIdAndIsDislike(boardId, Long.valueOf(0));
-        long dislike = likeRepository.countByBoardIdAndIsDislike(boardId, Long.valueOf(1));
+        long like = likeRepository.countByBoardIdAndIsDislike(boardId, false);
+        long dislike = likeRepository.countByBoardIdAndIsDislike(boardId, true);
 
         LikeCount_OUT LikeCountDTO = new LikeCount_OUT(like, dislike);
 

@@ -13,10 +13,12 @@ public class Bookmark_OUT {
     private Long board_id;
     private String content;
     private String title;
+    private String username;
 
     public Bookmark_OUT(Board board) {
         this.board_id = board.getId();
         this.content = board.getContent();
         this.title = board.getTitle();
+        this.username = board.getUser().getNickname();
     }
 }

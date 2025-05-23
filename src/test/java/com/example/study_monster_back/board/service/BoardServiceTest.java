@@ -68,7 +68,7 @@ public class BoardServiceTest {
         );
 
         // when
-        CreateBoardResponseDto responseDto = boardService.createBoard(requestDto);
+        CreateBoardResponseDto responseDto = boardService.createBoard(requestDto, "1L");
 
         // then
         // responseDto 검증
@@ -109,7 +109,7 @@ public class BoardServiceTest {
                 user.getId(),
                 Arrays.asList("original1", "original2")
         );
-        CreateBoardResponseDto createdBoard = boardService.createBoard(createDto);
+        CreateBoardResponseDto createdBoard = boardService.createBoard(createDto, "1L");
 
         UpdateBoardRequestDto updateDto = new UpdateBoardRequestDto(
                 "수정된 제목",
@@ -119,7 +119,7 @@ public class BoardServiceTest {
         );
 
         // when
-        boardService.updateBoard(createdBoard.getId(), updateDto);
+        boardService.updateBoard(createdBoard.getId(), updateDto, "1L");
 
         // then
         Board updatedBoard = boardRepository.findByIdWithTags(createdBoard.getId())
@@ -150,14 +150,14 @@ public class BoardServiceTest {
                 user.getId(),
                 Arrays.asList("deleteTest1", "deleteTest2")
         );
-        CreateBoardResponseDto created = boardService.createBoard(requestDto);
+        CreateBoardResponseDto created = boardService.createBoard(requestDto, "1L");
         Long boardId = created.getId();
 
         Board board = boardRepository.findById(boardId).orElseThrow();
 
         commentRepository.save(new Comment(null, "댓글1", LocalDateTime.now(), LocalDateTime.now(), user, board));
         commentRepository.save(new Comment(null, "댓글2", LocalDateTime.now(), LocalDateTime.now(), user, board));
-        likeRepository.save(new Like(null, Long.valueOf(0), user, board));
+        likeRepository.save(new Like(null, false, user, board));
         feedbackRepository.save(new Feedback(null, "피드백1", "피드백2", LocalDateTime.now(), board));
 
         assertThat(boardRepository.findById(boardId)).isNotEmpty();
@@ -167,7 +167,7 @@ public class BoardServiceTest {
         assertThat(feedbackRepository.countByBoard(board)).isEqualTo(1);
 
         // when
-        boardService.deleteBoard(boardId);
+        boardService.deleteBoard(boardId, "1L");
 
         // then
         assertThat(boardRepository.findById(boardId)).isEmpty();
@@ -188,7 +188,7 @@ public class BoardServiceTest {
                 user.getId(),
                 Arrays.asList("get_tag1", "get_tag2")
         );
-        CreateBoardResponseDto created = boardService.createBoard(requestDto);
+        CreateBoardResponseDto created = boardService.createBoard(requestDto, "1L");
 
 
         // when

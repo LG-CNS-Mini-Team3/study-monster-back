@@ -13,5 +13,5 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     void deleteAllByBoard(Board board);
     Long countByBoard(Board board);
 
-    long countByBoardIdAndIsDislike(Long boardId, Long isDislike);
+    long countByBoardIdAndIsDislike(Long boardId, Boolean isDislike);
 }
