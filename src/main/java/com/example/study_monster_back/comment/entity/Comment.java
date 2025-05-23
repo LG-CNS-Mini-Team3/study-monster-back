@@ -29,7 +29,9 @@ import lombok.Data;
 @Entity
 @Data
 @EntityListeners(AuditingEntityListener.class)
-public class Comment {
+
+public class Comment{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
