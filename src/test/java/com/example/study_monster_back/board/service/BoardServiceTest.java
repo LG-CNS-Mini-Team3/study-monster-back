@@ -157,7 +157,7 @@ public class BoardServiceTest {
 
         commentRepository.save(new Comment(null, "댓글1", LocalDateTime.now(), LocalDateTime.now(), user, board));
         commentRepository.save(new Comment(null, "댓글2", LocalDateTime.now(), LocalDateTime.now(), user, board));
-        likeRepository.save(new Like(null, user, board));
+        likeRepository.save(new Like(null, Long.valueOf(0), user, board));
         feedbackRepository.save(new Feedback(null, "피드백1", "피드백2", LocalDateTime.now(), board));
 
         assertThat(boardRepository.findById(boardId)).isNotEmpty();
