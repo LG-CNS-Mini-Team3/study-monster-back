@@ -18,7 +18,7 @@ public class UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("해당 이메일을 찾을 수 없습니다: " + email));
 
-        return new UserInfoResponseDto(user.getEmail(), user.getNickname(), user.getName());
+        return new UserInfoResponseDto(user.getId(), user.getEmail(), user.getNickname(), user.getName());
     }
 
     public User getUserByEmail(String email) {
