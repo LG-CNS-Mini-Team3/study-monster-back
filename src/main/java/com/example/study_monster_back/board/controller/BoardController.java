@@ -1,5 +1,14 @@
 package com.example.study_monster_back.board.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.web.bind.annotation.*;
+
+import com.example.study_monster_back.board.dto.response.BoardResponse;
+import com.example.study_monster_back.board.service.BoardSearchService;
+import com.example.study_monster_back.board.service.BoardService;
 import com.example.study_monster_back.board.dto.request.CreateBoardRequestDto;
 import com.example.study_monster_back.board.dto.request.UpdateBoardRequestDto;
 import com.example.study_monster_back.board.dto.response.CreateBoardResponseDto;
@@ -24,6 +33,17 @@ import java.util.List;
 @RestController
 public class BoardController {
     private final BoardService boardService;
+    private final BoardSearchService boardSearchService;
+
+    @GetMapping
+    public Page<BoardResponse> boardList(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(name = "keyword", defaultValue = "") String keyword,
+            @RequestParam(defaultValue = "all") String type) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
+        return boardSearchService.getBoards(keyword, type, pageable);
+    }
 
     @GetMapping("/{boardId}")
     public ResponseEntity<GetBoardResponseDto> getBoard(
@@ -63,7 +83,7 @@ public class BoardController {
         List<TagResponseDto> tagResponseDtoList = boardService.getBoardTags(boardId);
         return ResponseEntity.ok(tagResponseDtoList);
     }
-  
+      
     @GetMapping("/{boardId}/feedback")
     public ResponseEntity<StudyFeedbackResponse> getStudyFeedback(@PathVariable Long boardId) {
         return ResponseEntity.ok(boardService.getStudyFeedback(boardId));
