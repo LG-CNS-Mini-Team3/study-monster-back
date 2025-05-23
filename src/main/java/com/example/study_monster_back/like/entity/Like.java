@@ -25,8 +25,8 @@ public class Like{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "is_dislike", columnDefinition = "integer default 0")
-    private Long isDislike;
+    @Column(nullable = false)
+    private Integer isDislike = 0;
     
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;

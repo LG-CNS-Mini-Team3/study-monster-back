@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,13 +35,15 @@ public class StudyGroupController {
         return ResponseEntity.ok(studyGroups);
     }
     @PostMapping()
-    public ResponseEntity<?> createStudyGroup(
-        @RequestBody StudyGroupRequestDTO dto,
-        @RequestParam Long userId) { //아이디는 테스트용
+    public ResponseEntity<?> createStudyGroup(@RequestBody StudyGroupRequestDTO dto) {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String email = authentication.getName(); // 로그인된 사용자의 이메일
 
-        studyGroupService.create(dto, userId);
-        return ResponseEntity.ok(Map.of("message", "스터디 생성 완료"));
-    }
+   // Long  = studyGroupService.findUserIdByEmail(email); // 서비스에서 userId 가져오기
+    studyGroupService.create(dto, email);
+
+    return ResponseEntity.ok(Map.of("message", "스터디 생성 완료"));
+}
 
     @GetMapping("/{studyId}")
     public ResponseEntity<StudyGroupResponseDTO> getStudyGroupById(@PathVariable Long studyId) {

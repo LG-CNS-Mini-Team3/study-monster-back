@@ -54,10 +54,10 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Transactional
-    public CreateBoardResponseDto createBoard(CreateBoardRequestDto boardRequestDto) {
+    public CreateBoardResponseDto createBoard(CreateBoardRequestDto boardRequestDto, String email) {
 
-        // TODO: 추후 수정 예정(지금은 유저 정보를 dto에서 받아옴.)
-        User user = getUserOrThrow(boardRequestDto.getUserId());
+
+        User user = getUserOrThrow(email);
 
         Board board = Board.builder()
             .title(boardRequestDto.getTitle())
@@ -77,13 +77,13 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public UpdateBoardResponseDto updateBoard(Long boardId, UpdateBoardRequestDto boardRequestDto) {
+    public UpdateBoardResponseDto updateBoard(Long boardId, UpdateBoardRequestDto boardRequestDto, String email) {
 
         // TODO: userId 시큐리티컨텍스트에서 받아서 자신의 게시글이 맞는지 확인해야 함.
         Board board = boardRepository.findByIdWithTags(boardId)
             .orElseThrow(() -> new IllegalArgumentException("Board not found with ID: " + boardId));
 
-        User user = getUserOrThrow(boardRequestDto.getUserId());
+        User user = getUserOrThrow(email);
         if(!board.getUser().getId().equals(user.getId())) {
             throw new IllegalArgumentException("게시글을 작성한 사용자만 게시글을 수정할 수 있습니다.");
         }
@@ -115,11 +115,16 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public void deleteBoard(Long boardId) {
+    public void deleteBoard(Long boardId, String email) {
 
         Board board = boardRepository.findById(boardId)
             .orElseThrow(() -> new IllegalArgumentException("Board not found with ID: " + boardId));
-        // TODO: userId 시큐리티컨텍스트에서 받아서 자신의 게시글이 맞는지 확인해야 함.
+
+        User user = getUserOrThrow(email);
+
+        if(!board.getUser().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("게시글을 작성한 사용자만 게시글을 삭제할 수 있습니다.");
+        }
 
         commentRepository.deleteAllByBoard(board);
         likeRepository.deleteAllByBoard(board);
@@ -164,10 +169,10 @@ public class BoardServiceImpl implements BoardService {
 
     }
 
-    private User getUserOrThrow(Long userId) {
+    private User getUserOrThrow(String email) {
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with email: " + email));
         return user;
     }
 }
